@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,12 +19,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-u-7e@6wsiwl8s7m8evkkb5b%vw)jprxfal)-)o8x**rnw&!^$y'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -77,14 +72,20 @@ WSGI_APPLICATION = 'server.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'nombre_de_tu_base_de_datos', #TODO CREATE DATABASE nombre_de_tu_base_de_datos CHARACTER SET UTF8;
-        'USER': 'tu_usuario',  # python manage.py makemigrations python manage.py migrate
-        'PASSWORD': 'tu_contraseña', 
-        'HOST': 'localhost',  # o la dirección de tu servidor MySQL
-        'PORT': '3306',       # puerto predeterminado para MySQL
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default=3306, cast=int),
     }
 }
 
+SECRET_KEY = config('SECRET_KEY')
+
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+#TODO CREATE DATABASE nombre_de_tu_base_de_datos CHARACTER SET UTF8;
+#TODO python manage.py makemigrations python manage.py migrate
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
