@@ -7,14 +7,18 @@ import MiscelaneosTable from "./tables/MiscelaneosTable";
 import PaquetesTable from "./tables/PaquetesTable";
 import EtiquetasTable from "./tables/EtiquetasTable";
 import ProductosTable from "./tables/ProductosTable";
+import SearchBar from "./SearchBar";
 
 export default function MainPanel(className) {
     return (
-        <div className={"w-full h-screen bg-[hsl(100,100,100)] overflow-clip " + className}>
+        <div className={"w-full text-black h-screen bg-[hsl(100,100,100)] overflow-clip " + className}>
+            <div className="flex justify-center">
+                <SearchBar className="w-1/2"/>
+            </div>
             <Tabs className="h-full overflow-clip flex flex-col"
                   selectedTabPanelClassName="react-tabs__tab-panel--selected grow overflow-clip"
                   selectedTabClassName="bg-gray-500 rounded-t-xl rounded-tr-xl">
-                <TabList className="flex justify-center">
+                <TabList className="flex justify-center mb-4 border">
                     <Tab>Insumos</Tab>
                     <Tab>Liquidos</Tab>
                     <Tab>Envases</Tab>

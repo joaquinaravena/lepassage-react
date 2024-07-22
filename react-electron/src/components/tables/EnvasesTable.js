@@ -1,3 +1,6 @@
+import TableContainer from "./TableContainer";
+
+
 export default function EnvasesTable(className) {
 
     const datos = [
@@ -8,8 +11,8 @@ export default function EnvasesTable(className) {
 
     const encabezados = ["Nombre Envases", "Edad", "Ciudad"];
     return (
-        <div className={className + " overflow-clip h-full flex flex-col"}>
-            <table>
+        <TableContainer className={className + " overflow-clip h-full flex flex-col"}>
+            <table className=" ">
                 <thead>
                 <tr>
                     {encabezados.map((encabezado) => (
@@ -27,6 +30,6 @@ export default function EnvasesTable(className) {
                 ))}
                 </tbody>
             </table>
-        </div>
+        </TableContainer>
     );
 }

@@ -1,3 +1,5 @@
+import TableContainer from "./TableContainer";
+
 export default function LiquidosTable(className) {
 
     const datos = [
@@ -8,8 +10,8 @@ export default function LiquidosTable(className) {
 
     const encabezados = ["Nombre Fragancia", "Edad", "Ciudad"];
     return (
-        <div className={className + " overflow-clip h-full flex flex-col"}>
-            <table>
+        <TableContainer className={className + " overflow-clip h-full flex flex-col"}>
+            <table className=" ">
                 <thead>
                 <tr>
                     {encabezados.map((encabezado) => (
@@ -27,6 +29,6 @@ export default function LiquidosTable(className) {
                 ))}
                 </tbody>
             </table>
-        </div>
+        </TableContainer>
     );
 }

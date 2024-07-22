@@ -1,3 +1,5 @@
+import TableContainer from "./TableContainer";
+
 export default function EtiquetasTable(className) {
 
     const datos = [
@@ -9,8 +11,8 @@ export default function EtiquetasTable(className) {
     const encabezados = ["Nombre Etiqueta", "Edad", "Ciudad"];
 
     return (
-        <div className={className + " overflow-clip h-full flex flex-col"}>
-            <table>
+        <TableContainer className={className + " overflow-clip h-full flex flex-col"}>
+            <table className=" ">
                 <thead>
                 <tr>
                     {encabezados.map((encabezado) => (
@@ -28,6 +30,6 @@ export default function EtiquetasTable(className) {
                 ))}
                 </tbody>
             </table>
-        </div>
+        </TableContainer>
     );
 }
