@@ -34,6 +34,11 @@ yarn.lock
 # Ignore macOS specific files
 .DS_Store
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Ignore Windows thumbnail cache files
 Thumbs.db
 
