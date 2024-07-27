@@ -24,7 +24,7 @@
   "main": "public/main.js",
   "homepage": "./",
   "scripts": {
-    "start": "concurrently -k \"cross-env BROWSER=none npm run start-react\" \"wait-on tcp:3000 && electron .\"",
+    "start": "concurrently -k \"cross-env BROWSER=none npm run start-react\" \"wait-on tcp:3000 && electron .\" \"python ../server/manage.py runserver\"",
     "start-react": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
