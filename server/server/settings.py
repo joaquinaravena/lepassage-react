@@ -86,9 +86,6 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-#TODO CREATE DATABASE nombre_de_tu_base_de_datos CHARACTER SET UTF8;
-#TODO python manage.py makemigrations python manage.py migrate
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
