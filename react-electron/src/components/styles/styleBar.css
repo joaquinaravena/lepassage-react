@@ -1,0 +1,15 @@
+.react-tabs__tab-panel--selected {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+@media (max-width: 640px) {
+    .react-tabs__tab-list {
+        flex-direction: column;
+    }
+
+    .react-tabs__tab-list .react-tabs__tab {
+        margin-bottom: 0.5rem;
+    }
+}
