@@ -19,6 +19,7 @@
     "react-tabs": "^6.0.2",
     "semver": "^7.6.3",
     "styled-components": "^6.1.12",
+    "sweetalert2": "^11.12.3",
     "tailwindcss": "^3.4.6",
     "web-vitals": "^2.1.4"
   },
