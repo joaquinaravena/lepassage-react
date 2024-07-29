@@ -1,24 +1,10 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets
 from .models import Liquido, Etiqueta, Insumo, Miscelanea, Paquete, Envase, Producto
 from .serializers import (
     LiquidoSerializer, EtiquetaSerializer, InsumoSerializer, MiscelaneaSerializer,
     PaqueteSerializer, EnvaseSerializer, ProductoSerializer
 )
 
-class ProductList(generics.ListCreateAPIView):
-    queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer
-
-class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer
-
-class MiscelaneaList(generics.ListCreateAPIView):
-    queryset = Producto.objects.filter(id_objeto__isnull=False)
-    serializer_class = ProductoSerializer
-
-
-## POST
 class LiquidoViewSet(viewsets.ModelViewSet):
     queryset = Liquido.objects.all()
     serializer_class = LiquidoSerializer
