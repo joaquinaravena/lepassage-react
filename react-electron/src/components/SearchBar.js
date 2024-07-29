@@ -12,34 +12,16 @@ export default function SearchBar({ onSearch }) {
         onSearch(query);
     };
 
-    const searchBarStyle = {
-        display: 'flex',
-        alignItems: 'center',
-    };
-
-    const inputStyle = {
-        marginRight: '8px',
-    };
-
-    const buttonStyle = {
-        display: 'flex',
-        alignItems: 'center',
-        padding: '8px',
-        cursor: 'pointer',
-        backgroundColor: 'transparent',
-        border: 'none',
-    };
-
     return (
-        <div style={searchBarStyle}>
+        <div className="flex items-center bg-search-bar">
             <input
                 type="text"
                 value={query}
                 onChange={handleInputChange}
                 placeholder="Buscar..."
-                style={inputStyle}
+                className="mr-2 bg-search-bar"
             />
-            <button onClick={handleSearch} style={buttonStyle}>
+            <button onClick={handleSearch} className="flex items-center p-2 cursor-pointer bg-transparent border-none">
                 <FaSearch />
             </button>
         </div>

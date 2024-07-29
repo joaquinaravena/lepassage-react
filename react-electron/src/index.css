@@ -17,3 +17,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+body {
+  @apply text-text-border; /* Usa la clase de Tailwind para aplicar el color de texto */
+}
