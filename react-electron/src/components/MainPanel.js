@@ -1,4 +1,4 @@
-import { Tabs, TabPanel } from "react-tabs";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import {
   insumosConfig,
@@ -10,18 +10,9 @@ import {
   productosConfig,
 } from "./tables/TableConfigs";
 import GenericTable from "./tables/GenericTable";
+import SearchBar from "./SearchBar";
 import "./styles/styleBar.css";
-import TabHeader from "./TabHeader";
 
-const tabConfigs = [
-    { label: 'Insumos', config: insumosConfig },
-    { label: 'Liquidos', config: liquidosConfig },
-    { label: 'Envases', config: envasesConfig },
-    { label: 'Miscelaneos', config: miscelaneaConfig },
-    { label: 'Paquetes', config: paquetesConfig },
-    { label: 'Etiquetas', config: etiquetasConfig },
-    { label: 'Productos', config: productosConfig }
-  ];
 
 export default function MainPanel({ className }) {
   return (
@@ -31,12 +22,44 @@ export default function MainPanel({ className }) {
         selectedTabPanelClassName="react-tabs__tab-panel--selected grow overflow-auto"
         selectedTabClassName="bg-selected-tab rounded-t-xl rounded-tr-xl"
       >
-        <TabHeader />
-        {tabConfigs.map(({ label, config }) => (
-          <TabPanel key={label} className="overflow-y-auto bg-panel-background">
-            <GenericTable config={config} />
-          </TabPanel>
-        ))}
+        <div className="flex items-center justify-between relative bg-tab-bar">
+          <div className="flex-grow overflow-x-auto">
+            <TabList className="flex justify-center sm:justify-start mb-4 space-x-4 whitespace-nowrap">
+              <Tab>Insumos</Tab>
+              <Tab>Liquidos</Tab>
+              <Tab>Envases</Tab>
+              <Tab>Miscelaneos</Tab>
+              <Tab>Paquetes</Tab>
+              <Tab>Etiquetas</Tab>
+              <Tab>Productos</Tab>
+            </TabList>
+          </div>
+          <div className="flex-shrink-0 ml-4">
+            <SearchBar />
+          </div>
+        </div>
+
+        <TabPanel className="overflow-y-auto bg-panel-background">
+          <GenericTable config={insumosConfig} />
+        </TabPanel>
+        <TabPanel className="overflow-y-auto bg-panel-background">
+          <GenericTable config={liquidosConfig} />
+        </TabPanel>
+        <TabPanel className="overflow-y-auto bg-panel-background">
+          <GenericTable config={envasesConfig} />
+        </TabPanel>
+        <TabPanel className="overflow-y-auto bg-panel-background">
+          <GenericTable config={miscelaneaConfig} />
+        </TabPanel>
+        <TabPanel className="overflow-y-auto bg-panel-background">
+          <GenericTable config={paquetesConfig} />
+        </TabPanel>
+        <TabPanel className="overflow-y-auto bg-panel-background">
+          <GenericTable config={etiquetasConfig} />
+        </TabPanel>
+        <TabPanel className="overflow-y-auto bg-panel-background">
+          <GenericTable config={productosConfig} />
+        </TabPanel>
       </Tabs>
     </div>
   );
