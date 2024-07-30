@@ -1,14 +1,37 @@
 from django.db import models
-
 # Create your models here.from django.db import models
 
-class Liquido(models.Model):
-    TIPO_LIQUIDO_CHOICES = [
+TIPO_LIQUIDO_CHOICES = [
+    ('TIPO1', 'Tipo 1'),
+    ('TIPO2', 'Tipo 2'),
+    # Agrega más opciones según sea necesario
+]
+
+TIPO_INSUMO_CHOICES = [
+        ('TIPO1', 'Tipo 1'),
+        ('TIPO2', 'Tipo 2'),
+        # Agrega más opciones según sea necesario
+]
+
+TIPO_OBJETO_CHOICES = [
         ('TIPO1', 'Tipo 1'),
         ('TIPO2', 'Tipo 2'),
         # Agrega más opciones según sea necesario
     ]
-    
+
+TIPO_PAQUETE_CHOICES = [
+        ('TIPO1', 'Tipo 1'),
+        ('TIPO2', 'Tipo 2'),
+        # Agrega más opciones según sea necesario
+    ]
+
+TIPO_ENVASE_CHOICES = [
+        ('TIPO1', 'Tipo 1'),
+        ('TIPO2', 'Tipo 2'),
+        # Agrega más opciones según sea necesario
+    ]
+
+class Liquido(models.Model):    
     nombre_liquido = models.CharField(max_length=45)
     sku = models.CharField(max_length=45)
     tipo_liquido = models.CharField(max_length=45, choices=TIPO_LIQUIDO_CHOICES)
@@ -32,13 +55,7 @@ class Etiqueta(models.Model):
         return self.nombre_etiqueta
 
 
-class Insumo(models.Model):
-    TIPO_INSUMO_CHOICES = [
-        ('TIPO1', 'Tipo 1'),
-        ('TIPO2', 'Tipo 2'),
-        # Agrega más opciones según sea necesario
-    ]
-    
+class Insumo(models.Model):    
     nombre_insumo = models.CharField(max_length=45)
     sku = models.CharField(max_length=45)
     tipo_insumo = models.CharField(max_length=45, choices=TIPO_INSUMO_CHOICES)
@@ -49,13 +66,7 @@ class Insumo(models.Model):
         return self.nombre_insumo
 
 
-class Miscelanea(models.Model):
-    TIPO_OBJETO_CHOICES = [
-        ('TIPO1', 'Tipo 1'),
-        ('TIPO2', 'Tipo 2'),
-        # Agrega más opciones según sea necesario
-    ]
-    
+class Miscelanea(models.Model):    
     sku = models.CharField(max_length=45)
     nombre_objeto = models.CharField(max_length=45)
     tipo_objeto = models.CharField(max_length=45, choices=TIPO_OBJETO_CHOICES)
@@ -66,13 +77,7 @@ class Miscelanea(models.Model):
         return self.nombre_objeto
 
 
-class Paquete(models.Model):
-    TIPO_PAQUETE_CHOICES = [
-        ('TIPO1', 'Tipo 1'),
-        ('TIPO2', 'Tipo 2'),
-        # Agrega más opciones según sea necesario
-    ]
-    
+class Paquete(models.Model): 
     id_etiqueta = models.ForeignKey(Etiqueta, on_delete=models.SET_NULL, null=True, blank=True)
     nombre_paquete = models.CharField(max_length=45)
     sku = models.CharField(max_length=45)
@@ -84,13 +89,7 @@ class Paquete(models.Model):
         return self.nombre_paquete
 
 
-class Envase(models.Model):
-    TIPO_ENVASE_CHOICES = [
-        ('TIPO1', 'Tipo 1'),
-        ('TIPO2', 'Tipo 2'),
-        # Agrega más opciones según sea necesario
-    ]
-    
+class Envase(models.Model):    
     id_liquido = models.ForeignKey(Liquido, on_delete=models.CASCADE)
     id_etiqueta = models.ForeignKey(Etiqueta, on_delete=models.SET_NULL, null=True, blank=True)
     sku = models.CharField(max_length=45)
