@@ -1,8 +1,9 @@
-import React from "react";
-import TableContainer from "./tableTools/TableContainer";
-import useTableData from "./tableTools/useDataTable";
+import React from 'react';
+import TableContainer from './TableContainer';
+import useTableData from './useDataTable';
 
-export default function EtiquetasTable({ className }) {
+export default function GenericTable({ config }) {
+  const { fields, tableName } = config;
   const {
     datos,
     selectedIndex,
@@ -10,11 +11,11 @@ export default function EtiquetasTable({ className }) {
     handleEditRow,
     handleDeleteRow,
     handleRowClick,
-  } = useTableData([]);
+  } = useTableData({ fields, tableName });
 
   return (
     <TableContainer
-      className={`${className} overflow-auto h-full flex flex-col bg-options-panel`}
+      className={`overflow-auto h-full flex flex-col bg-options-panel`}
     >
       <div className="flex justify-between mb-4">
         <div className="flex space-x-4">
@@ -41,15 +42,14 @@ export default function EtiquetasTable({ className }) {
       <table className="min-w-full">
         <thead>
           <tr>
-            <th className="px-4 py-2 text-left border-b border-gray-200">
-              Nombre
-            </th>
-            <th className="px-4 py-2 text-left border-b border-gray-200">
-              Edad
-            </th>
-            <th className="px-4 py-2 text-left border-b border-gray-200">
-              Ciudad
-            </th>
+            {config.fields.map((field) => (
+              <th
+                key={field.name}
+                className="px-4 py-2 text-left border-b border-gray-200"
+              >
+                {field.placeholder}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -57,19 +57,18 @@ export default function EtiquetasTable({ className }) {
             <tr
               key={index}
               className={`cursor-pointer ${
-                selectedIndex === index ? "bg-blue-50" : ""
+                selectedIndex === index ? 'bg-blue-50' : ''
               }`}
               onClick={() => handleRowClick(index)}
             >
-              <td className="px-4 py-2 border-b border-gray-200">
-                {fila.Nombre}
-              </td>
-              <td className="px-4 py-2 border-b border-gray-200">
-                {fila.Edad}
-              </td>
-              <td className="px-4 py-2 border-b border-gray-200">
-                {fila.Ciudad}
-              </td>
+              {config.fields.map((field) => (
+                <td
+                  key={field.name}
+                  className="px-4 py-2 border-b border-gray-200"
+                >
+                  {fila[field.name]}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
