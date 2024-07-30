@@ -92,7 +92,7 @@ export const MiscelaneaConfig = () => {
   };
 };
 
-export const PaquetesConfig = () => {
+export const PackagingConfig = () => {
   const { choices: tipo_paquete_choices, isLoading } = useFetchChoices("/api/tipo-paquete-choices/");
 
   const fields = [

@@ -5,7 +5,7 @@ import {
   InsumosConfig,
   LiquidosConfig,
   EnvasesConfig,
-  PaquetesConfig,
+  PackagingConfig,
   etiquetasConfig,
   MiscelaneaConfig,
   productosConfig,
@@ -17,7 +17,7 @@ import "./styles/styleBar.css";
 const MainPanel = ({ className }) => {
   const liquidosConfig = LiquidosConfig();
   const insumosConfig = InsumosConfig();
-  const paquetesConfig = PaquetesConfig();
+  const packagingConfig = PackagingConfig();
   const miscelaneaConfig = MiscelaneaConfig();
   const envasesConfig = EnvasesConfig();
 
@@ -34,8 +34,8 @@ const MainPanel = ({ className }) => {
               <Tab>Insumos</Tab>
               <Tab>Liquidos</Tab>
               <Tab>Envases</Tab>
-              <Tab>Miscelaneos</Tab>
-              <Tab>Paquetes</Tab>
+              <Tab>Miscelaneas</Tab>
+              <Tab>Packaging</Tab>
               <Tab>Etiquetas</Tab>
               <Tab>Productos</Tab>
             </TabList>
@@ -58,7 +58,7 @@ const MainPanel = ({ className }) => {
           <GenericTable config={miscelaneaConfig} />
         </TabPanel>
         <TabPanel className="overflow-y-auto bg-panel-background">
-          <GenericTable config={paquetesConfig} />
+          <GenericTable config={packagingConfig} />
         </TabPanel>
         <TabPanel className="overflow-y-auto bg-panel-background">
           <GenericTable config={etiquetasConfig} />
