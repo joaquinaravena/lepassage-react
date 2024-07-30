@@ -1,17 +1,23 @@
-import React from 'react';
-import TableContainer from './TableContainer';
-import useTableData from './useDataTable';
+import React from "react";
+import TableContainer from "./TableContainer";
+import useTableData from "./useDataTable";
 
 export default function GenericTable({ config }) {
   const { fields, tableName } = config;
+
   const {
     datos,
     selectedIndex,
+    isLoading,
     handleAddRow,
     handleEditRow,
     handleDeleteRow,
     handleRowClick,
   } = useTableData({ fields, tableName });
+
+  if (isLoading) {
+    return <div>Cargando datos...</div>;
+  }
 
   return (
     <TableContainer
@@ -57,7 +63,7 @@ export default function GenericTable({ config }) {
             <tr
               key={index}
               className={`cursor-pointer ${
-                selectedIndex === index ? 'bg-blue-50' : ''
+                selectedIndex === index ? "bg-blue-50" : ""
               }`}
               onClick={() => handleRowClick(index)}
             >

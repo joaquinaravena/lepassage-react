@@ -1,20 +1,26 @@
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import React from "react";
 import "react-tabs/style/react-tabs.css";
 import {
-  insumosConfig,
-  liquidosConfig,
-  envasesConfig,
-  paquetesConfig,
+  InsumosConfig,
+  LiquidosConfig,
+  EnvasesConfig,
+  PaquetesConfig,
   etiquetasConfig,
-  miscelaneaConfig,
+  MiscelaneaConfig,
   productosConfig,
 } from "./tables/TableConfigs";
 import GenericTable from "./tables/GenericTable";
 import SearchBar from "./SearchBar";
 import "./styles/styleBar.css";
 
+const MainPanel = ({ className }) => {
+  const liquidosConfig = LiquidosConfig();
+  const insumosConfig = InsumosConfig();
+  const paquetesConfig = PaquetesConfig();
+  const miscelaneaConfig = MiscelaneaConfig();
+  const envasesConfig = EnvasesConfig();
 
-export default function MainPanel({ className }) {
   return (
     <div className={"w-full h-screen overflow-hidden " + className}>
       <Tabs
@@ -63,4 +69,6 @@ export default function MainPanel({ className }) {
       </Tabs>
     </div>
   );
-}
+};
+
+export default MainPanel;

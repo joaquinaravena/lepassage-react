@@ -1,13 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 export default function useTableData({ fields, tableName }) {
-  if (!fields || !tableName) {
-    throw new Error("`fields` and `tableName` are required");
-  }
-
   const [datos, setDatos] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulando una llamada a la API para obtener datos iniciales
+    setTimeout(() => {
+      setDatos([
+        // Datos de ejemplo
+        {
+          Nombre: "Producto 1",
+          SKU: "123",
+          Tipo: "Base",
+          Volumen: "100ml",
+          Precio: "10",
+          Vencimiento: "2024-01-01",
+        },
+        {
+          Nombre: "Producto 2",
+          SKU: "456",
+          Tipo: "Aromatizante",
+          Volumen: "200ml",
+          Precio: "20",
+          Vencimiento: "2024-06-01",
+        },
+      ]);
+      setIsLoading(false);
+    }, 1000);
+  }, [tableName]);
 
   const createInputsHtml = (fields, selectedData) => {
     return fields
@@ -121,6 +144,7 @@ export default function useTableData({ fields, tableName }) {
   return {
     datos,
     selectedIndex,
+    isLoading,
     handleAddRow,
     handleEditRow,
     handleDeleteRow,
