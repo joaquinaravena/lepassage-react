@@ -101,12 +101,36 @@ class Envase(models.Model):
 
 
 class Producto(models.Model):
-    id_objeto = models.ForeignKey(Miscelanea, on_delete=models.SET_NULL, null=True, blank=True)
-    id_paquete = models.ForeignKey(Paquete, on_delete=models.SET_NULL, null=True, blank=True)
-    id_envase = models.ForeignKey(Envase, on_delete=models.SET_NULL, null=True, blank=True)
     nombre_producto = models.CharField(max_length=45)
     stock = models.IntegerField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)
-
+    miscelaneas = models.ManyToManyField(Miscelanea, through='ProductoMiscelanea')
+    envases = models.ManyToManyField(Envase, through='ProductoEnvase')
+    paquetes = models.ManyToManyField(Paquete, through='ProductoPaquete')
+    
     def __str__(self):
         return self.nombre_producto
+
+#Tablas de relacion muchos a muchos
+class ProductoMiscelanea(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    miscelanea = models.ForeignKey(Miscelanea, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('producto', 'miscelanea')
+
+
+class ProductoEnvase(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    envase = models.ForeignKey(Envase, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('producto', 'envase')
+
+
+class ProductoPaquete(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    paquete = models.ForeignKey(Paquete, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('producto', 'paquete')
