@@ -18,6 +18,7 @@ export default function useTableData({ fields, tableName }) {
           Volumen: "100ml",
           Precio: "10",
           Vencimiento: "2024-01-01",
+          Stock: 100,
         },
         {
           Nombre: "Producto 2",
@@ -26,6 +27,7 @@ export default function useTableData({ fields, tableName }) {
           Volumen: "200ml",
           Precio: "20",
           Vencimiento: "2024-06-01",
+          Stock: 200,
         },
       ]);
       setIsLoading(false);
@@ -35,7 +37,7 @@ export default function useTableData({ fields, tableName }) {
   const createInputsHtml = (fields, selectedData) => {
     return fields
       .map((field, index) => {
-        const value = selectedData ? selectedData[field.name] : "";
+        const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "indefinido") : "";
         return `<input id="swal-input${index}" class="swal2-input" placeholder="${field.placeholder}" value="${value}">`;
       })
       .join("");
@@ -67,6 +69,7 @@ export default function useTableData({ fields, tableName }) {
     });
 
     if (formValues && fields.every((field) => formValues[field.name])) {
+      //HACER LLAMADA A LA API PARA AGREGAR A LA TABLA SEGÚN TABLE NAME
       setDatos([...datos, formValues]);
       Swal.fire(
         `${tableName} agregado`,
@@ -100,6 +103,7 @@ export default function useTableData({ fields, tableName }) {
       });
 
       if (formValues && fields.every((field) => formValues[field.name])) {
+        //HACER LLAMADA A LA API PARA ACTUALIZAR LA TABLA SEGÚN TABLE NAME
         const updatedDatos = [...datos];
         updatedDatos[selectedIndex] = formValues;
         setDatos(updatedDatos);
@@ -129,16 +133,30 @@ export default function useTableData({ fields, tableName }) {
         cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
+          //HACER LLAMADA A LA API PARA ELIMINAR DE LA TABLA SEGÚN TABLE NAME
           setDatos(datos.filter((_, i) => i !== selectedIndex));
           setSelectedIndex(null);
           Swal.fire("Eliminado", "La fila ha sido eliminada.", "success");
         }
       });
     }
+    else {
+      Swal.fire("Error", "No hay fila seleccionada", "error");
+    }
   };
 
   const handleRowClick = (index) => {
     setSelectedIndex(index);
+  };
+
+  const updateStock = (index, change) => {
+    setDatos((prevDatos) =>
+      prevDatos.map((fila, i) =>
+        i === index
+          ? { ...fila, Stock: (fila.Stock || 0) + change }
+          : fila
+      )
+    );
   };
 
   return {
@@ -149,5 +167,6 @@ export default function useTableData({ fields, tableName }) {
     handleEditRow,
     handleDeleteRow,
     handleRowClick,
+    updateStock, // Return the updateStock function
   };
 }

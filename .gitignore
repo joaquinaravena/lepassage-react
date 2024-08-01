@@ -44,3 +44,6 @@ Thumbs.db
 
 # Ignore backup files
 *~
+
+#Ingore txt
+.txt

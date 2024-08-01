@@ -13,11 +13,15 @@ export default function GenericTable({ config }) {
     handleEditRow,
     handleDeleteRow,
     handleRowClick,
+    updateStock, // Add a function to update stock
   } = useTableData({ fields, tableName });
 
   if (isLoading) {
     return <div>Cargando datos...</div>;
   }
+
+  // Check if the table has a Stock field
+  const hasStockField = fields.some(field => field.name === "Stock");
 
   return (
     <TableContainer
@@ -48,7 +52,7 @@ export default function GenericTable({ config }) {
       <table className="min-w-full">
         <thead>
           <tr>
-            {config.fields.map((field) => (
+            {fields.map((field) => (
               <th
                 key={field.name}
                 className="px-4 py-2 text-left border-b border-gray-200"
@@ -56,6 +60,9 @@ export default function GenericTable({ config }) {
                 {field.placeholder}
               </th>
             ))}
+            {hasStockField && (
+              <th className="px-4 py-2 text-left border-b border-gray-200">Acciones</th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -67,14 +74,30 @@ export default function GenericTable({ config }) {
               }`}
               onClick={() => handleRowClick(index)}
             >
-              {config.fields.map((field) => (
+              {fields.map((field) => (
                 <td
                   key={field.name}
                   className="px-4 py-2 border-b border-gray-200"
                 >
-                  {fila[field.name]}
+                  {fila[field.name] !== undefined ? fila[field.name] : "indefinido"}
                 </td>
               ))}
+              {hasStockField && (
+                <td className="px-4 py-2 border-b border-gray-200 flex space-x-4">
+                  <button
+                    onClick={() => updateStock(index, 1)} // Increment stock
+                    className="p-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  >
+                    +
+                  </button>
+                  <button
+                    onClick={() => updateStock(index, -1)} // Decrement stock
+                    className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
+                  >
+                    -
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
