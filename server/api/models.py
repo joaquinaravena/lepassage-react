@@ -7,12 +7,6 @@ TIPO_LIQUIDO_CHOICES = [
     # Agrega más opciones según sea necesario
 ]
 
-TIPO_INSUMO_CHOICES = [
-        ('TIPO1', 'Tipo 1'),
-        ('TIPO2', 'Tipo 2'),
-        # Agrega más opciones según sea necesario
-]
-
 TIPO_OBJETO_CHOICES = [
         ('TIPO1', 'Tipo 1'),
         ('TIPO2', 'Tipo 2'),
@@ -30,18 +24,20 @@ TIPO_ENVASE_CHOICES = [
         ('TIPO2', 'Tipo 2'),
         # Agrega más opciones según sea necesario
     ]
-
-class Insumo(models.Model):    
-    nombre_insumo = models.CharField(max_length=45)
+class InsumoView(models.Model):
+    tipo = models.CharField(max_length=10)
+    id = models.IntegerField(primary_key=True)
+    nombre = models.CharField(max_length=45, null=True)
     sku = models.CharField(max_length=45)
-    tipo_insumo = models.CharField(max_length=45, choices=TIPO_INSUMO_CHOICES)
-    stock = models.IntegerField()
+    tipo_especifico = models.CharField(max_length=45)
+    volumen = models.IntegerField(null=True)
     precio = models.DecimalField(max_digits=5, decimal_places=2)
+    stock = models.IntegerField(null=True)
 
-    def __str__(self):
-        return self.nombre_insumo
-
-
+    class Meta:
+        managed = False  # No permitir a Django gestionar esta tabla
+        db_table = 'insumos'
+        
 class Liquido(models.Model):
     nombre_liquido = models.CharField(max_length=45)
     sku = models.CharField(max_length=45)
@@ -107,7 +103,7 @@ class Producto(models.Model):
     miscelaneas = models.ManyToManyField(Miscelanea, through='ProductoMiscelanea')
     envases = models.ManyToManyField(Envase, through='ProductoEnvase')
     paquetes = models.ManyToManyField(Paquete, through='ProductoPaquete')
-    
+
     def __str__(self):
         return self.nombre_producto
 
