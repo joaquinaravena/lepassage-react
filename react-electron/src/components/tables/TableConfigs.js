@@ -99,7 +99,7 @@ export const MiscelaneaConfig = () => {
     { name: "Precio", placeholder: "Precio" },
   ];
 
-  const apiUrl = "/api/miscelaneos/";
+  const apiUrl = "/api/miscelaneas/";
 
   return {
     fields,

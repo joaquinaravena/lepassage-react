@@ -10,7 +10,7 @@ export default function useTableData({ fields, tableName, apiUrl }) {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(apiUrl);
+        const response = await fetch("http://localhost:8000"+apiUrl);
         const data = await response.json();
         setDatos(data);
       } catch (error) {
