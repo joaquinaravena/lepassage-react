@@ -18,7 +18,9 @@ const useFetchChoices = (endpoint) => {
 };
 
 export const LiquidosConfig = () => {
-  const { choices: tipo_liquido_choices, isLoading } = useFetchChoices("/api/tipo-liquido-choices/");
+  const { choices: tipo_liquido_choices } = useFetchChoices(
+    "/api/tipo-liquido-choices/"
+  );
 
   const fields = [
     { name: "Nombre", placeholder: "Nombre del Líquido" },
@@ -33,9 +35,12 @@ export const LiquidosConfig = () => {
     { name: "Vencimiento", placeholder: "Vencimiento", type: "date" },
   ];
 
+  const apiUrl = "/api/liquidos/";
+
   return {
     fields,
     tableName: "Líquidos",
+    apiUrl,
   };
 };
 
@@ -48,10 +53,13 @@ export const etiquetasConfig = {
     { name: "Precio", placeholder: "Precio" },
   ],
   tableName: "Etiquetas",
+  apiUrl: "/api/etiquetas/",
 };
 
 export const InsumosConfig = () => {
-  const { choices: tipo_insumo_choices, isLoading } = useFetchChoices("/api/tipo-insumo-choices/");
+  const { choices: tipo_insumo_choices } = useFetchChoices(
+    "/api/tipo-insumo-choices/"
+  );
 
   const fields = [
     { name: "Nombre", placeholder: "Nombre del Insumo" },
@@ -65,14 +73,19 @@ export const InsumosConfig = () => {
     { name: "Precio", placeholder: "Precio" },
   ];
 
+  const apiUrl = "/api/insumos/";
+
   return {
     fields,
     tableName: "Insumos",
+    apiUrl,
   };
 };
 
 export const MiscelaneaConfig = () => {
-  const { choices: tipo_objeto_choices, isLoading } = useFetchChoices("/api/tipo-objeto-choices/");
+  const { choices: tipo_objeto_choices } = useFetchChoices(
+    "/api/tipo-objeto-choices/"
+  );
 
   const fields = [
     { name: "Nombre", placeholder: "Nombre del Producto" },
@@ -86,14 +99,19 @@ export const MiscelaneaConfig = () => {
     { name: "Precio", placeholder: "Precio" },
   ];
 
+  const apiUrl = "/api/miscelaneos/";
+
   return {
     fields,
     tableName: "Miscelaneos",
+    apiUrl,
   };
 };
 
 export const PackagingConfig = () => {
-  const { choices: tipo_paquete_choices, isLoading } = useFetchChoices("/api/tipo-paquete-choices/");
+  const { choices: tipo_paquete_choices } = useFetchChoices(
+    "/api/tipo-paquete-choices/"
+  );
 
   const fields = [
     { name: "Nombre", placeholder: "Nombre del Paquete" },
@@ -107,14 +125,19 @@ export const PackagingConfig = () => {
     { name: "Precio", placeholder: "Precio" },
   ];
 
+  const apiUrl = "/api/paquetes/";
+
   return {
     fields,
     tableName: "Paquetes",
+    apiUrl,
   };
 };
 
 export const EnvasesConfig = () => {
-  const { choices: tipo_envase_choices, isLoading } = useFetchChoices("/api/tipo-envase-choices/");
+  const { choices: tipo_envase_choices } = useFetchChoices(
+    "/api/tipo-envase-choices/"
+  );
 
   const fields = [
     { name: "Nombre", placeholder: "Nombre del Envase" },
@@ -129,9 +152,12 @@ export const EnvasesConfig = () => {
     { name: "Precio", placeholder: "Precio" },
   ];
 
+  const apiUrl = "/api/envases/";
+
   return {
     fields,
     tableName: "Envases",
+    apiUrl,
   };
 };
 
@@ -143,4 +169,5 @@ export const productosConfig = {
     { name: "Precio", placeholder: "Precio" },
   ],
   tableName: "Productos",
+  apiUrl: "/api/productos/",
 };

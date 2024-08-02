@@ -1,38 +1,26 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
-export default function useTableData({ fields, tableName }) {
+export default function useTableData({ fields, tableName, apiUrl }) {
   const [datos, setDatos] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulando una llamada a la API para obtener datos iniciales
-    setTimeout(() => {
-      setDatos([
-        // Datos de ejemplo
-        {
-          Nombre: "Producto 1",
-          SKU: "123",
-          Tipo: "Base",
-          Volumen: "100ml",
-          Precio: "10",
-          Vencimiento: "2024-01-01",
-          Stock: 100,
-        },
-        {
-          Nombre: "Producto 2",
-          SKU: "456",
-          Tipo: "Aromatizante",
-          Volumen: "200ml",
-          Precio: "20",
-          Vencimiento: "2024-06-01",
-          Stock: 200,
-        },
-      ]);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        setDatos(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
       setIsLoading(false);
-    }, 1000);
-  }, [tableName]);
+    };
+
+    fetchData();
+  }, [apiUrl, tableName]);
 
   const createInputsHtml = (fields, selectedData) => {
     return fields

@@ -3,7 +3,7 @@ import TableContainer from "./TableContainer";
 import useTableData from "./useDataTable";
 
 export default function GenericTable({ config }) {
-  const { fields, tableName } = config;
+  const { fields, tableName, apiUrl } = config;
 
   const {
     datos,
@@ -14,7 +14,7 @@ export default function GenericTable({ config }) {
     handleDeleteRow,
     handleRowClick,
     updateStock, // Add a function to update stock
-  } = useTableData({ fields, tableName });
+  } = useTableData({ fields, tableName, apiUrl });
 
   if (isLoading) {
     return <div>Cargando datos...</div>;
