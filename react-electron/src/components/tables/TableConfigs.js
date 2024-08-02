@@ -56,30 +56,15 @@ export const etiquetasConfig = {
   apiUrl: "/api/etiquetas/",
 };
 
-export const InsumosConfig = () => {
-  const { choices: tipo_insumo_choices } = useFetchChoices(
-    "/api/tipo-insumo-choices/"
-  );
-
-  const fields = [
+export const insumosConfig = {
+  fields: [
     { name: "Nombre", placeholder: "Nombre del Insumo" },
     { name: "SKU", placeholder: "SKU" },
-    {
-      name: "Tipo",
-      placeholder: "Tipo de Insumo",
-      options: tipo_insumo_choices,
-    },
     { name: "Stock", placeholder: "Stock" },
     { name: "Precio", placeholder: "Precio" },
-  ];
-
-  const apiUrl = "/api/insumos/";
-
-  return {
-    fields,
-    tableName: "Insumos",
-    apiUrl,
-  };
+  ],
+  tableName: "Insumos",
+  apiUrl: "/api/insumos/",
 };
 
 export const MiscelaneaConfig = () => {

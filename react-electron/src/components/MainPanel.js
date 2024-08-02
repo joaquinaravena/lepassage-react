@@ -2,7 +2,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import React from "react";
 import "react-tabs/style/react-tabs.css";
 import {
-  InsumosConfig,
+  insumosConfig,
   LiquidosConfig,
   EnvasesConfig,
   PackagingConfig,
@@ -16,7 +16,6 @@ import "./styles/styleBar.css";
 
 const MainPanel = ({ className }) => {
   const liquidosConfig = LiquidosConfig();
-  const insumosConfig = InsumosConfig();
   const packagingConfig = PackagingConfig();
   const miscelaneaConfig = MiscelaneaConfig();
   const envasesConfig = EnvasesConfig();

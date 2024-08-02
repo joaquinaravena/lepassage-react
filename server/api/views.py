@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from .models import Liquido, Etiqueta, InsumoView, Miscelanea, Paquete, Envase, Producto, TIPO_LIQUIDO_CHOICES, TIPO_OBJETO_CHOICES, TIPO_PAQUETE_CHOICES, TIPO_ENVASE_CHOICES
 from .serializers import (
-    LiquidoSerializer, EtiquetaSerializer, InsumoSerializer, MiscelaneaSerializer,
+    LiquidoSerializer, EtiquetaSerializer, InsumoViewSerializer, MiscelaneaSerializer,
     PaqueteSerializer, EnvaseSerializer, ProductoSerializer
 )
 from django.http import JsonResponse
@@ -17,7 +17,7 @@ class EtiquetaViewSet(viewsets.ModelViewSet):
 
 class InsumoViewSet(viewsets.ModelViewSet):
     queryset = InsumoView.objects.all()
-    serializer_class = InsumoSerializer
+    serializer_class = InsumoViewSerializer
 
 class MiscelaneaViewSet(viewsets.ModelViewSet):
     queryset = Miscelanea.objects.all()

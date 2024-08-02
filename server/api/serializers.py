@@ -11,7 +11,7 @@ class EtiquetaSerializer(serializers.ModelSerializer):
         model = Etiqueta
         fields = '__all__'
 
-class InsumoSerializer(serializers.ModelSerializer):
+class InsumoViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsumoView
         fields = '__all__'

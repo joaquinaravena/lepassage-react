@@ -2,7 +2,8 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from .views import (
     LiquidoViewSet, EtiquetaViewSet, InsumoViewSet, MiscelaneaViewSet,
-    PaqueteViewSet, EnvaseViewSet, ProductoViewSet, get_tipo_envase_choices, get_tipo_liquido_choices, get_tipo_objeto_choices, get_tipo_paquete_choices
+    PaqueteViewSet, EnvaseViewSet, ProductoViewSet, 
+    get_tipo_envase_choices, get_tipo_liquido_choices, get_tipo_objeto_choices, get_tipo_paquete_choices
 )
 
 router = DefaultRouter()
