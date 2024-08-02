@@ -85,6 +85,7 @@ class Paquete(models.Model):
 
 
 class Envase(models.Model):
+    nombre_envase = models.CharField(max_length=45)
     id_liquido = models.ForeignKey(Liquido, on_delete=models.SET_NULL, null=True, blank=True)
     sku = models.CharField(max_length=45)
     tipo_envase = models.CharField(max_length=45, choices=TIPO_ENVASE_CHOICES)
@@ -98,6 +99,7 @@ class Envase(models.Model):
 
 class Producto(models.Model):
     nombre_producto = models.CharField(max_length=45)
+    sku = models.CharField(max_length=45)
     stock = models.IntegerField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)
     miscelaneas = models.ManyToManyField(Miscelanea, through='ProductoMiscelanea')

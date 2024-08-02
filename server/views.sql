@@ -7,8 +7,7 @@ SELECT
     volumen,
     NULL AS stock,
     precio,
-    vencimiento AS fecha_vencimiento
-FROM 
+FROM
     Liquido
 
 UNION ALL
@@ -20,8 +19,7 @@ SELECT
     volumen,
     stock,
     precio,
-    NULL AS fecha_vencimiento
-FROM 
+FROM
     Etiqueta
 
 UNION ALL
@@ -33,8 +31,7 @@ SELECT
     NULL AS volumen,
     stock,
     precio,
-    NULL AS fecha_vencimiento
-FROM 
+FROM
     Miscelanea
 
 UNION ALL
@@ -46,63 +43,57 @@ SELECT
     NULL AS volumen,
     stock,
     precio,
-    NULL AS fecha_vencimiento
-FROM 
-    Paquete;
+FROM
+    Paquete
 
+UNION ALL
+
+SELECT
+    'envase' AS tipo,
+    nombre_envase AS nombre,
+    sku,
+    volumen AS volumen,
+    stock,
+    precio,
+FROM
+    Envase;
 
 CREATE VIEW productos AS
 SELECT 
     p.nombre_producto AS nombre_producto,
+    e.sku AS sku,
+    NULL AS fragancia,
+    p.envases.envase.volumen AS volumen,
     p.stock AS stock_producto,
     p.precio AS precio_producto,
-    'producto compuesto' AS tipo_generico,
-    NULL as tipo_especifico,
-    NULL AS sku,
-    NULL AS volumen,
-    NULL AS fecha_vencimiento
-FROM 
+FROM
     Producto p
 
 UNION ALL
 
 SELECT 
-    NULL AS nombre_producto,
+    e.nombre_envase AS nombre_producto,
+    e.sku AS sku,
+    NULL AS fragancia,
+    e.volumen AS volumen,
     e.stock AS stock_producto,
     e.precio AS precio_producto,
-    'envase' AS tipo_generico,
-    e.tipo_envase tipo_especifico,
-    e.sku AS sku,
-    e.volumen AS volumen,
-    NULL AS fecha_vencimiento
 FROM
     Envase e
-
-UNION ALL
-
-SELECT 
-    l.nombre_liquido AS nombre_producto,
-    NULL AS stock_producto,
-    l.precio AS precio_producto,
-    'liquido' AS tipo_generico,
-    l.tipo_liquido tipo_especifico,
-    l.sku AS sku,
-    l.volumen AS volumen,
-    l.vencimiento AS fecha_vencimiento
-FROM
-    Liquido l
+WHERE
+    e.tipo_envase = 'frasco de color'
 
 UNION ALL
 
 SELECT
     m.nombre_objeto AS nombre_producto,
+    m.sku AS sku,
+    NULL AS fragancia,
+    NULL AS volumen,
     m.stock AS stock_producto,
     m.precio AS precio_producto,
-    'miscelanea' AS tipo_generico,
-    m.tipo_objeto tipo_especifico,
-    m.sku AS sku,
-    NULL AS volumen,
-    NULL AS fecha_vencimiento
 FROM
     Miscelanea m
+WHERE
+    e.tipo_objeto = {'lampara', 'colgante', 'varilla'};
 
