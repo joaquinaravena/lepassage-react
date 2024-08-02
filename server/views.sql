@@ -61,13 +61,19 @@ FROM
 CREATE VIEW productos AS
 SELECT 
     p.nombre_producto AS nombre_producto,
-    e.sku AS sku,
-    NULL AS fragancia,
-    p.envases.envase.volumen AS volumen,
+    p.sku AS sku,
+    l.tipo_liquido AS fragancia,  -- Usar tipo_liquido como fragancia
+    en.volumen AS volumen,
     p.stock AS stock_producto,
-    p.precio AS precio_producto,
+    p.precio AS precio_producto
 FROM
     Producto p
+JOIN
+    ProductoEnvase pe ON p.id = pe.producto_id
+JOIN
+    Envase en ON pe.envase_id = en.id
+LEFT JOIN
+    Liquido l ON en.id_liquido_id = l.id
 
 UNION ALL
 
