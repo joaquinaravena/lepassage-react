@@ -56,60 +56,53 @@ SELECT
     p.nombre_producto AS nombre_producto,
     p.stock AS stock_producto,
     p.precio AS precio_producto,
-    'miscelanea' AS tipo_componente,
-    m.sku AS sku_componente,
-    m.nombre_objeto AS nombre_componente,
-    m.tipo_objeto AS tipo_componente_detalle,
+    'producto compuesto' AS tipo_generico,
+    NULL as tipo_especifico,
+    NULL AS sku,
     NULL AS volumen,
-    m.stock AS stock_componente,
-    m.precio AS precio_componente,
     NULL AS fecha_vencimiento
 FROM 
     Producto p
-JOIN 
-    ProductoMiscelanea pm ON p.id = pm.producto_id
-JOIN 
-    Miscelanea m ON pm.miscelanea_id = m.id
 
 UNION ALL
 
 SELECT 
-    p.nombre_producto AS nombre_producto,
-    p.stock AS stock_producto,
-    p.precio AS precio_producto,
-    'envase' AS tipo_componente,
-    e.sku AS sku_componente,
-    e.sku AS nombre_componente,
-    e.tipo_envase AS tipo_componente_detalle,
+    NULL AS nombre_producto,
+    e.stock AS stock_producto,
+    e.precio AS precio_producto,
+    'envase' AS tipo_generico,
+    e.tipo_envase tipo_especifico,
+    e.sku AS sku,
     e.volumen AS volumen,
-    e.stock AS stock_componente,
-    e.precio AS precio_componente,
     NULL AS fecha_vencimiento
-FROM 
-    Producto p
-JOIN 
-    ProductoEnvase pe ON p.id = pe.producto_id
-JOIN 
-    Envase e ON pe.envase_id = e.id
+FROM
+    Envase e
 
 UNION ALL
 
 SELECT 
-    p.nombre_producto AS nombre_producto,
-    p.stock AS stock_producto,
-    p.precio AS precio_producto,
-    'paquete' AS tipo_componente,
-    paq.sku AS sku_componente,
-    paq.nombre_paquete AS nombre_componente,
-    paq.tipo_paquete AS tipo_componente_detalle,
+    l.nombre_liquido AS nombre_producto,
+    NULL AS stock_producto,
+    l.precio AS precio_producto,
+    'liquido' AS tipo_generico,
+    l.tipo_liquido tipo_especifico,
+    l.sku AS sku,
+    l.volumen AS volumen,
+    l.vencimiento AS fecha_vencimiento
+FROM
+    Liquido l
+
+UNION ALL
+
+SELECT
+    m.nombre_objeto AS nombre_producto,
+    m.stock AS stock_producto,
+    m.precio AS precio_producto,
+    'miscelanea' AS tipo_generico,
+    m.tipo_objeto tipo_especifico,
+    m.sku AS sku,
     NULL AS volumen,
-    paq.stock AS stock_componente,
-    paq.precio AS precio_componente,
     NULL AS fecha_vencimiento
-FROM 
-    Producto p
-JOIN 
-    ProductoPaquete pp ON p.id = pp.producto_id
-JOIN 
-    Paquete paq ON pp.paquete_id = paq.id;
+FROM
+    Miscelanea m
 

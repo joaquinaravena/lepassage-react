@@ -85,7 +85,7 @@ class Paquete(models.Model):
 
 
 class Envase(models.Model):
-    id_liquido = models.ForeignKey(Liquido, on_delete=models.CASCADE)
+    id_liquido = models.ForeignKey(Liquido, on_delete=models.SET_NULL, null=True, blank=True)
     sku = models.CharField(max_length=45)
     tipo_envase = models.CharField(max_length=45, choices=TIPO_ENVASE_CHOICES)
     volumen = models.IntegerField()
