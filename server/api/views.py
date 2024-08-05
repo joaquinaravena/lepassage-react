@@ -1,12 +1,15 @@
 from rest_framework import viewsets
-from .models import Liquido, Etiqueta, InsumoView, Miscelanea, Paquete, Envase, Producto, TIPO_LIQUIDO_CHOICES, TIPO_OBJETO_CHOICES, TIPO_PAQUETE_CHOICES, TIPO_ENVASE_CHOICES
+from .models import Liquido, Etiqueta, InsumoView, ProductosView, Miscelanea, Paquete, Envase, Producto, \
+    TIPO_LIQUIDO_CHOICES, TIPO_OBJETO_CHOICES, TIPO_PAQUETE_CHOICES, TIPO_ENVASE_CHOICES, TIPO_INSUMO_CHOICES
 from .serializers import (
-    LiquidoSerializer, EtiquetaSerializer, InsumoViewSerializer, MiscelaneaSerializer,
+    LiquidoSerializer, EtiquetaSerializer, InsumoViewSerializer, ProductosViewSerializer, MiscelaneaSerializer,
     PaqueteSerializer, EnvaseSerializer, ProductoSerializer
 )
 from django.http import JsonResponse
 
-
+class ProductosViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ProductosView.objects.all()
+    serializer_class = ProductosViewSerializer
 class LiquidoViewSet(viewsets.ModelViewSet):
     queryset = Liquido.objects.all()
     serializer_class = LiquidoSerializer
@@ -15,7 +18,7 @@ class EtiquetaViewSet(viewsets.ModelViewSet):
     queryset = Etiqueta.objects.all()
     serializer_class = EtiquetaSerializer
 
-class InsumoViewSet(viewsets.ModelViewSet):
+class InsumoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = InsumoView.objects.all()
     serializer_class = InsumoViewSerializer
 
@@ -46,3 +49,6 @@ def get_tipo_paquete_choices(request):
 
 def get_tipo_envase_choices(request):
     return JsonResponse({"tipo_envase_choices": TIPO_ENVASE_CHOICES})
+
+def get_tipo_insumo_choices(request):
+    return JsonResponse({"tipo_envase_choices": TIPO_INSUMO_CHOICES})

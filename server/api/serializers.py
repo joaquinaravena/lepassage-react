@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Liquido, Etiqueta, InsumoView, Miscelanea, Paquete, Envase, Producto
+from .models import Liquido, Etiqueta, InsumoView, ProductosView, Miscelanea, Paquete, Envase, Producto
 
 class LiquidoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,6 +14,11 @@ class EtiquetaSerializer(serializers.ModelSerializer):
 class InsumoViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsumoView
+        fields = '__all__'
+
+class ProductosViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductosView
         fields = '__all__'
 
 class MiscelaneaSerializer(serializers.ModelSerializer):

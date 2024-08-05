@@ -101,5 +101,5 @@ SELECT
 FROM
     Miscelanea m
 WHERE
-    e.tipo_objeto = {'lampara', 'colgante', 'varilla'};
+    m.vendible = TRUE;
 

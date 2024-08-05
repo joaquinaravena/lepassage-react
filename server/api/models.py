@@ -24,15 +24,24 @@ TIPO_ENVASE_CHOICES = [
         ('TIPO2', 'Tipo 2'),
         # Agrega más opciones según sea necesario
     ]
+
+TIPO_INSUMO_CHOICES = [
+        ('TIPO1', 'liquido'),
+        ('TIPO2', 'etiqueta'),
+        ('TIPO3', 'miscelanea'),
+        ('TIPO4', 'paquete'),
+        ('TIPO5', 'envase'),
+        # Agrega más opciones según sea necesario
+    ]
+
 class InsumoView(models.Model):
-    tipo = models.CharField(max_length=10)
+    tipo = models.CharField(max_length=10, choices=TIPO_LIQUIDO_CHOICES)
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=45, null=True)
     sku = models.CharField(max_length=45)
-    tipo_especifico = models.CharField(max_length=45)
-    volumen = models.IntegerField(null=True)
+    volumen = models.PositiveIntegerField(null=True)
     precio = models.DecimalField(max_digits=5, decimal_places=2)
-    stock = models.IntegerField(null=True)
+    stock = models.PositiveIntegerField(null=True)
 
     class Meta:
         managed = False  # No permitir a Django gestionar esta tabla
@@ -54,20 +63,27 @@ class Etiqueta(models.Model):
     id_liquido = models.ForeignKey(Liquido, on_delete=models.SET_NULL, null=True, blank=True)
     nombre_etiqueta = models.CharField(max_length=45)
     sku = models.CharField(max_length=45)
-    volumen = models.IntegerField()
-    stock = models.IntegerField()
+    stock = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
         return self.nombre_etiqueta
+
+    @property
+    def volumen(self):
+        """Retorna el volumen del liquido asociado si existe, de lo contrario retorna None."""
+        if self.id_liquido:
+            return self.id_liquido.volumen
+        return None
 
 
 class Miscelanea(models.Model):
     sku = models.CharField(max_length=45)
     nombre_objeto = models.CharField(max_length=45)
     tipo_objeto = models.CharField(max_length=45, choices=TIPO_OBJETO_CHOICES)
-    stock = models.IntegerField()
+    stock = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)
+    vendible = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nombre_objeto
@@ -89,8 +105,8 @@ class Envase(models.Model):
     id_liquido = models.ForeignKey(Liquido, on_delete=models.SET_NULL, null=True, blank=True)
     sku = models.CharField(max_length=45)
     tipo_envase = models.CharField(max_length=45, choices=TIPO_ENVASE_CHOICES)
-    volumen = models.IntegerField()
-    stock = models.IntegerField()
+    volumen = models.PositiveIntegerField()
+    stock = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
@@ -100,7 +116,7 @@ class Envase(models.Model):
 class Producto(models.Model):
     nombre_producto = models.CharField(max_length=45)
     sku = models.CharField(max_length=45)
-    stock = models.IntegerField()
+    stock = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)
     miscelaneas = models.ManyToManyField(Miscelanea, through='ProductoMiscelanea')
     envases = models.ManyToManyField(Envase, through='ProductoEnvase')
@@ -108,6 +124,18 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre_producto
+
+class ProductosView(models.Model):
+    nombre_producto = models.CharField(max_length=45)
+    sku = models.CharField(max_length=45)
+    fragancia = models.CharField(max_length=45, null=True)
+    volumen = models.IntegerField(null=True)
+    stock_producto = models.IntegerField()
+    precio_producto = models.DecimalField(max_digits=5, decimal_places=2)
+
+    class Meta:
+        managed = False  # No permitir a Django gestionar esta tabla
+        db_table = 'productos'
 
 #Tablas de relacion muchos a muchos
 class ProductoMiscelanea(models.Model):
