@@ -1,50 +1,51 @@
 USE lepassage;
+
 CREATE VIEW insumos AS
-SELECT 
+SELECT
     'liquido' AS tipo,
     nombre_liquido AS nombre,
     sku,
     volumen,
     NULL AS stock,
-    precio,
+    precio
 FROM
-    Liquido
+    api_liquido
 
 UNION ALL
 
-SELECT 
+SELECT
     'etiqueta' AS tipo,
     nombre_etiqueta AS nombre,
     sku,
     volumen,
     stock,
-    precio,
+    precio
 FROM
-    Etiqueta
+    api_etiqueta
 
 UNION ALL
 
-SELECT 
+SELECT
     'miscelanea' AS tipo,
     nombre_objeto AS nombre,
     sku,
     NULL AS volumen,
     stock,
-    precio,
+    precio
 FROM
-    Miscelanea
+    api_miscelanea
 
 UNION ALL
 
-SELECT 
+SELECT
     'paquete' AS tipo,
     nombre_paquete AS nombre,
     sku,
     NULL AS volumen,
     stock,
-    precio,
+    precio
 FROM
-    Paquete
+    api_paquete
 
 UNION ALL
 
@@ -52,40 +53,40 @@ SELECT
     'envase' AS tipo,
     nombre_envase AS nombre,
     sku,
-    volumen AS volumen,
+    volumen,
     stock,
-    precio,
+    precio
 FROM
-    Envase;
+    api_envase;
 
 CREATE VIEW productos AS
 SELECT 
     p.nombre_producto AS nombre_producto,
     p.sku AS sku,
-    l.tipo_liquido AS fragancia,  -- Usar tipo_liquido como fragancia
+    l.nombre_liquido AS fragancia,  -- Cambiado a nombre_liquido para reflejar el nombre de la fragancia
     en.volumen AS volumen,
     p.stock AS stock_producto,
     p.precio AS precio_producto
 FROM
-    Producto p
+    api_producto p
 JOIN
-    ProductoEnvase pe ON p.id = pe.producto_id
+    api_productoenvase pe ON p.id = pe.producto_id
 JOIN
-    Envase en ON pe.envase_id = en.id
+    api_envase en ON pe.envase_id = en.id
 LEFT JOIN
-    Liquido l ON en.id_liquido_id = l.id
+    api_liquido l ON en.id_liquido_id = l.id
 
 UNION ALL
 
-SELECT 
+SELECT
     e.nombre_envase AS nombre_producto,
     e.sku AS sku,
     NULL AS fragancia,
     e.volumen AS volumen,
     e.stock AS stock_producto,
-    e.precio AS precio_producto,
+    e.precio AS precio_producto
 FROM
-    Envase e
+    api_envase e
 WHERE
     e.tipo_envase = 'frasco de color'
 
@@ -97,9 +98,9 @@ SELECT
     NULL AS fragancia,
     NULL AS volumen,
     m.stock AS stock_producto,
-    m.precio AS precio_producto,
+    m.precio AS precio_producto
 FROM
-    Miscelanea m
+    api_miscelanea m
 WHERE
     m.vendible = TRUE;
 
