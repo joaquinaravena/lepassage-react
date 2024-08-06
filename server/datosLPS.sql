@@ -57,6 +57,8 @@ INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase)
 INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('TEDSLYON500AMB', 'Lyon ambar con minitrigger', 905.00, 168, 500, 'PET');
 INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('MEGTAPPPBEIGE', 'Lyon ambar con minitrigger', 808.00, 246, 250, 'PET');
 INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('ADFER', 'Botella con tapa', 1055.90, 40, 2000, 'PET');
+INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('WALFCVID250ML', 'Frascos de color 250ml', 400.00, 124, 0, 'frasco de color'); 
+
 
 #Packaging (en models.py hay solo caja y bolsa y acá hay muchos distintos)
 INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('INWCACARBLNG', 'Caja blanca y negra', 69.48, 224, 'caja');
@@ -72,8 +74,6 @@ INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUE
 INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto) VALUES ('SWEVARRAT25x3', 'Varillas de ratan de 25mm x 3mm x U', 43.40, 148, 'varilla');
 INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto) VALUES ('-', 'Varillas de ratan de 23mm x 1.5mm x U', 43.40, 364, 'varilla');
 INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto) VALUES ('MercadoPago', 'Varillas de ratan de 20mm x 3mm x U', 43.40, 2000, 'varilla');
-INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto) VALUES ('WALFCVID250ML', 'Frascos de color 250ml', 400.00, 124, 'frasco'); #el tipo frasco no existe en models.py
-
 
 
 
