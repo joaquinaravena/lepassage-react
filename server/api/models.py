@@ -64,17 +64,10 @@ class Etiqueta(models.Model):
     sku = models.CharField(max_length=45)
     stock = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)
+    volumen = models.PositiveIntegerField()
 
     def __str__(self):
         return self.nombre_etiqueta
-
-    @property
-    def volumen(self):
-        """Retorna el volumen del liquido asociado si existe, de lo contrario retorna None."""
-        if self.id_liquido:
-            return self.id_liquido.volumen
-        return None
-
 
 class Miscelanea(models.Model):
     sku = models.CharField(max_length=45)
