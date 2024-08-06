@@ -2,27 +2,27 @@ from django.db import models
 # Create your models here.from django.db import models
 
 TIPO_LIQUIDO_CHOICES = [
-    ('TIPO1', 'Tipo 1'),
-    ('TIPO2', 'Tipo 2'),
-    # Agrega más opciones según sea necesario
+    ('TIP1', 'esencia'),
+    ('TIP2', 'fragancia'),
+    ('TIP3', 'agua'),
+    ('TIP4', 'alcohol'),
 ]
 
 TIPO_OBJETO_CHOICES = [
-        ('TIPO1', 'Tipo 1'),
-        ('TIPO2', 'Tipo 2'),
-        # Agrega más opciones según sea necesario
+        ('TIPO1', 'varilla'),
+        ('TIPO2', 'lampara'),
+        ('TIPO3', 'colgante'),
+        ('TIPO4', 'accesorio'),
     ]
 
 TIPO_PAQUETE_CHOICES = [
-        ('TIPO1', 'Tipo 1'),
-        ('TIPO2', 'Tipo 2'),
-        # Agrega más opciones según sea necesario
+        ('TIPO1', 'caja'),
+        ('TIPO2', 'bolsa'),
     ]
 
 TIPO_ENVASE_CHOICES = [
-        ('TIPO1', 'Tipo 1'),
-        ('TIPO2', 'Tipo 2'),
-        # Agrega más opciones según sea necesario
+        ('TIPO1', 'PET'),
+        ('TIPO2', 'vidrio'),
     ]
 
 TIPO_INSUMO_CHOICES = [
@@ -31,7 +31,6 @@ TIPO_INSUMO_CHOICES = [
         ('TIPO3', 'miscelanea'),
         ('TIPO4', 'paquete'),
         ('TIPO5', 'envase'),
-        # Agrega más opciones según sea necesario
     ]
 
 class InsumoView(models.Model):
