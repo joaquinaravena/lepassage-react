@@ -1,7 +1,7 @@
 #Cargo los datos de Le Pas Sage
 
 #Fragancias
-INSERT INTO api_liquido (sku, nombre_liquido, volumen, precio, tipo_liquido, vencimiento) VALUES ('LPSDA22363PLA5', 'Bois d Orient', 0 , 5, 'fragancia', NULL);
+INSERT INTO api_liquido (sku, nombre_liquido, volumen, precio, tipo_liquido, vencimiento) VALUES ('LPSDA22363PLA5', 'Bois d Orient', 10 , 5, 'fragancia', NULL);
 INSERT INTO api_liquido (sku, nombre_liquido, volumen, precio, tipo_liquido, vencimiento) VALUES ('LPSDA22367PLA5', 'Sensual', 0 , 5, 'fragancia', NULL);
 INSERT INTO api_liquido (sku, nombre_liquido, volumen, precio, tipo_liquido, vencimiento) VALUES ('LPSDA23423PLA5', 'Nuit Calme', 0 , 5, 'fragancia', NULL);
 INSERT INTO api_liquido (sku, nombre_liquido, volumen, precio, tipo_liquido, vencimiento) VALUES ('LPSPT23428PLA5', 'Sensual Textil', 0 , 5, 'fragancia', NULL);
@@ -59,14 +59,14 @@ INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase)
 INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('ADFER', 'Botella con tapa', 1055.90, 40, 2000, 'PET');
 
 #Packaging (en models.py hay solo caja y bolsa y acá hay muchos distintos)
-INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('INWCACARBLNG', 'Caja blanca y negra', 69.48, 224, 'Cartulina');
-INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('MBBOTE20x25', 'Bolsa Le Pas Sage', 46.5, 210, 'Tela');
-INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('PGCAMARE', 'Caja color madera Rec', 18, 0, 'Carton');
-INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('PGCAAMES', 'Caja color amarilla Dis', 22.00, 249, 'Carton');
-INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('INWBOLPAP', 'Bolsa negra y blanca con logo', 40.00, 482, 'Papel');
-INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('BOLBOLPO25X45', 'Bolsa blanca con logo dorado', 60.00, 1000, 'Polietileno');
-INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('BOLTUL7x9AlAr', 'Bolsita de tul blanco', 71.00, 200, '?');
-INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('BOLTUL13x18AlAr', 'Bolsita de tul rosa', 132.00, 100, '?');
+INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('INWCACARBLNG', 'Caja blanca y negra', 69.48, 224, 'caja');
+INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('MBBOTE20x25', 'Bolsa Le Pas Sage', 46.5, 210, 'bolsa');
+INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('PGCAMARE', 'Caja color madera Rec', 18, 0, 'caja');
+INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('PGCAAMES', 'Caja color amarilla Dis', 22.00, 249, 'caja');
+INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('INWBOLPAP', 'Bolsa negra y blanca con logo', 40.00, 482, 'bolsa');
+INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('BOLBOLPO25X45', 'Bolsa blanca con logo dorado', 60.00, 1000, 'bolsa');
+INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('BOLTUL7x9AlAr', 'Bolsita de tul blanco', 71.00, 200, 'bolsa');
+INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('BOLTUL13x18AlAr', 'Bolsita de tul rosa', 132.00, 100, 'bolsa');
 
 #Objetos
 INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto) VALUES ('SWEVARRAT25x3', 'Varillas de ratan de 25mm x 3mm x U', 43.40, 148, 'varilla');
