@@ -88,7 +88,7 @@ SELECT
 FROM
     api_envase e
 WHERE
-    e.tipo_envase = 'frasco de color'
+    e.tipo_envase = 'difusor'
 
 UNION ALL
 

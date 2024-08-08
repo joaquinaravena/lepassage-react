@@ -45,22 +45,21 @@ INSERT INTO api_liquido (sku, nombre_liquido, volumen, precio, tipo_liquido, ven
 INSERT INTO api_liquido (sku, nombre_liquido, volumen, precio, tipo_liquido, vencimiento) VALUES ('MC1638TPPLA5', 'Lavanda', 0 , 5, 'esencia', NULL);
 
 #Recipientes
-INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('MEGCOVID10AM', 'Colirio ambar', 92.00, 184, 10, 'vidrio');
-INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('EXPFRJARAM125', 'Frasco jarabe ambar con tapa', 100.94, 112, 125, 'vidrio');
-INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('EXPFRJARAM250', 'Frasco jarabe ambar con tapa', 149.99, 252, 250, 'vidrio');
-INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('EXPFRVIPSA60', 'Frasco VIP con valvulas blancas', 402.9, 190, 60, 'vidrio');
+INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('MEGCOVID10AM', 'Colirio ambar', 92.00, 184, 10, 'colirio');
+INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('EXPFRJARAM125', 'Frasco jarabe ambar con tapa', 100.94, 112, 125, 'jarabe');
+INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('EXPFRJARAM250', 'Frasco jarabe ambar con tapa', 149.99, 252, 250, 'jarabe');
+INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('EXPFRVIPSA60', 'Frasco VIP con valvulas blancas', 402.9, 190, 60, 'jarabe');
 INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('MEGFRBOAD500BL', 'Botella AD blanco con tapa', 0, 84, 500, 'PET');
 INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('MEGFRPLA500AM', 'Frasco ambar Levepet', 0, 166, 500, 'PET');
-INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('MEGFROLVID250', 'Frasco oliva cilindrico', 830.00, 228, 250, 'vidrio');
-INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('ARIFBVID250ML', 'Frasco ambar con tapa esmerilado', 5000.00, 90, 250, 'vidrio');
+INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('MEGFROLVID250', 'Frasco oliva cilindrico', 830.00, 228, 250, 'jarabe');
+INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('ARIFBVID250ML', 'Frasco ambar con tapa esmerilado', 5000.00, 90, 250, 'difusor');
 INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('TEDSLYON125AMB', 'Lyon ambar con valvula spray', 448.00, 89, 125, 'PET');
 INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('TEDSLYON500AMB', 'Lyon ambar con minitrigger', 905.00, 168, 500, 'PET');
 INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('MEGTAPPPBEIGE', 'Lyon ambar con minitrigger', 808.00, 246, 250, 'PET');
 INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('ADFER', 'Botella con tapa', 1055.90, 40, 2000, 'PET');
-INSERT INTO api_envase (sku, nombre_envase, volumen, precio, stock, tipo_envase) VALUES ('WALFCVID250ML', 'Frascos de color 250ml', 400.00, 124, 0, 'frasco de color'); 
 
 
-#Packaging (en models.py hay solo caja y bolsa y acá hay muchos distintos)
+#Packaging
 INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('INWCACARBLNG', 'Caja blanca y negra', 69.48, 224, 'caja');
 INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('MBBOTE20x25', 'Bolsa Le Pas Sage', 46.5, 210, 'bolsa');
 INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('PGCAMARE', 'Caja color madera Rec', 18, 0, 'caja');

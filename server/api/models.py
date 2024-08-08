@@ -22,8 +22,10 @@ TIPO_PAQUETE_CHOICES = [
 
 TIPO_ENVASE_CHOICES = [
         ('TIPO1', 'bidon'),
-        ('TIPO2', 'frasco'),
-        ('TIPO3', 'frasco de color'),
+        ('TIPO2', 'PET'),
+        ('TIPO3', 'difusor'),
+        ('TIPO4', 'jarabe'),
+        ('TIPO4', 'colirio'),
     ]
 
 TIPO_INSUMO_CHOICES = [
