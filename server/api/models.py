@@ -78,7 +78,7 @@ class Miscelanea(models.Model):
     tipo_objeto = models.CharField(max_length=45, choices=TIPO_OBJETO_CHOICES)
     stock = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)
-    vendible = models.BooleanField(default=True)
+    vendible = models.BooleanField(null=True, default=True)
 
     def __str__(self):
         return self.nombre_objeto

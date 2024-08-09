@@ -76,4 +76,3 @@ INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto) VALU
 
 
 
-

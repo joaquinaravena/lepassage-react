@@ -7,11 +7,11 @@ const useFetchChoices = (endpoint) => {
 
   useEffect(() => {
     fetch(endpoint)
-      .then((response) => response.json())
-      .then((data) => {
-        setChoices(data.choices || []);
-        setIsLoading(false);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          setChoices(data.choices || []);
+          setIsLoading(false);
+        });
   }, [endpoint]);
 
   return { choices, isLoading };
@@ -19,20 +19,16 @@ const useFetchChoices = (endpoint) => {
 
 export const LiquidosConfig = () => {
   const { choices: tipo_liquido_choices } = useFetchChoices(
-    "/api/tipo-liquido-choices/"
+      "/api/tipo-liquido-choices/"
   );
 
   const fields = [
-    { name: "Nombre", placeholder: "Nombre del Líquido" },
-    { name: "SKU", placeholder: "SKU" },
-    {
-      name: "Tipo",
-      placeholder: "Tipo de Líquido",
-      options: tipo_liquido_choices,
-    },
-    { name: "Volumen", placeholder: "Volumen" },
-    { name: "Precio", placeholder: "Precio" },
-    { name: "Vencimiento", placeholder: "Vencimiento", type: "date" },
+    { name: "nombre_liquido", placeholder: "Nombre del Líquido" },
+    { name: "sku", placeholder: "SKU" },
+    { name: "tipo_liquido", placeholder: "Tipo de Líquido", options: tipo_liquido_choices },
+    { name: "volumen", placeholder: "Volumen" },
+    { name: "precio", placeholder: "Precio" },
+    { name: "vencimiento", placeholder: "Vencimiento", type: "date" },
   ];
 
   const apiUrl = "/api/liquidos/";
@@ -46,11 +42,11 @@ export const LiquidosConfig = () => {
 
 export const etiquetasConfig = {
   fields: [
-    { name: "Nombre", placeholder: "Nombre de la Etiqueta" },
-    { name: "SKU", placeholder: "SKU" },
-    { name: "Volumen", placeholder: "Volumen" },
-    { name: "Stock", placeholder: "Stock" },
-    { name: "Precio", placeholder: "Precio" },
+    { name: "nombre_etiqueta", placeholder: "Nombre de la Etiqueta" },
+    { name: "sku", placeholder: "SKU" },
+    { name: "volumen", placeholder: "Volumen" },
+    { name: "stock", placeholder: "Stock" },
+    { name: "precio", placeholder: "Precio" },
   ],
   tableName: "Etiquetas",
   apiUrl: "/api/etiquetas/",
@@ -58,10 +54,10 @@ export const etiquetasConfig = {
 
 export const insumosConfig = {
   fields: [
-    { name: "Nombre", placeholder: "Nombre del Insumo" },
-    { name: "SKU", placeholder: "SKU" },
-    { name: "Stock", placeholder: "Stock" },
-    { name: "Precio", placeholder: "Precio" },
+    { name: "nombre", placeholder: "Nombre del Insumo" },
+    { name: "sku", placeholder: "SKU" },
+    { name: "stock", placeholder: "Stock" },
+    { name: "precio", placeholder: "Precio" },
   ],
   tableName: "Insumos",
   apiUrl: "/api/insumos/",
@@ -69,19 +65,15 @@ export const insumosConfig = {
 
 export const MiscelaneaConfig = () => {
   const { choices: tipo_objeto_choices } = useFetchChoices(
-    "/api/tipo-objeto-choices/"
+      "/api/tipo-objeto-choices/"
   );
 
   const fields = [
-    { name: "Nombre", placeholder: "Nombre del Producto" },
-    { name: "SKU", placeholder: "SKU" },
-    {
-      name: "Tipo",
-      placeholder: "Tipo de Objeto",
-      options: tipo_objeto_choices,
-    },
-    { name: "Stock", placeholder: "Stock" },
-    { name: "Precio", placeholder: "Precio" },
+    { name: "nombre_objeto", placeholder: "Nombre del Producto" },
+    { name: "sku", placeholder: "SKU" },
+    { name: "tipo_objeto", placeholder: "Tipo de Objeto", options: tipo_objeto_choices },
+    { name: "stock", placeholder: "Stock" },
+    { name: "precio", placeholder: "Precio" },
   ];
 
   const apiUrl = "/api/miscelaneas/";
@@ -95,19 +87,15 @@ export const MiscelaneaConfig = () => {
 
 export const PackagingConfig = () => {
   const { choices: tipo_paquete_choices } = useFetchChoices(
-    "/api/tipo-paquete-choices/"
+      "/api/tipo-paquete-choices/"
   );
 
   const fields = [
-    { name: "Nombre", placeholder: "Nombre del Paquete" },
-    { name: "SKU", placeholder: "SKU" },
-    {
-      name: "Tipo",
-      placeholder: "Tipo de Paquete",
-      options: tipo_paquete_choices,
-    },
-    { name: "Stock", placeholder: "Stock" },
-    { name: "Precio", placeholder: "Precio" },
+    { name: "nombre_paquete", placeholder: "Nombre del Paquete" },
+    { name: "sku", placeholder: "SKU" },
+    { name: "tipo_paquete", placeholder: "Tipo de Paquete", options: tipo_paquete_choices },
+    { name: "stock", placeholder: "Stock" },
+    { name: "precio", placeholder: "Precio" },
   ];
 
   const apiUrl = "/api/paquetes/";
@@ -121,20 +109,16 @@ export const PackagingConfig = () => {
 
 export const EnvasesConfig = () => {
   const { choices: tipo_envase_choices } = useFetchChoices(
-    "/api/tipo-envase-choices/"
+      "/api/tipo-envase-choices/"
   );
 
   const fields = [
-    { name: "Nombre", placeholder: "Nombre del Envase" },
-    { name: "SKU", placeholder: "SKU" },
-    {
-      name: "Tipo",
-      placeholder: "Tipo de Envase",
-      options: tipo_envase_choices,
-    },
-    { name: "Volumen", placeholder: "Volumen" },
-    { name: "Stock", placeholder: "Stock" },
-    { name: "Precio", placeholder: "Precio" },
+    { name: "nombre_envase", placeholder: "Nombre del Envase" },
+    { name: "sku", placeholder: "SKU" },
+    { name: "tipo_envase", placeholder: "Tipo de Envase", options: tipo_envase_choices },
+    { name: "volumen", placeholder: "Volumen" },
+    { name: "stock", placeholder: "Stock" },
+    { name: "precio", placeholder: "Precio" },
   ];
 
   const apiUrl = "/api/envases/";
@@ -146,12 +130,12 @@ export const EnvasesConfig = () => {
   };
 };
 
-//TODO: ver si productos usa sku
 export const productosConfig = {
   fields: [
-    { name: "Nombre", placeholder: "Nombre del Producto" },
-    { name: "Stock", placeholder: "Stock" },
-    { name: "Precio", placeholder: "Precio" },
+    { name: "nombre_producto", placeholder: "Nombre del Producto" },
+    { name: "sku", placeholder: "SKU" },
+    { name: "stock", placeholder: "Stock" },
+    { name: "precio", placeholder: "Precio" },
   ],
   tableName: "Productos",
   apiUrl: "/api/productos/",
