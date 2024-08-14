@@ -1,5 +1,5 @@
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import React from "react";
+import React, {useState} from "react";
 import "react-tabs/style/react-tabs.css";
 import {
   insumosConfig,
@@ -19,6 +19,12 @@ const MainPanel = ({ className }) => {
   const packagingConfig = PackagingConfig();
   const miscelaneaConfig = MiscelaneaConfig();
   const envasesConfig = EnvasesConfig();
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
 
   return (
     <div className={"w-full h-screen overflow-hidden " + className}>
@@ -40,30 +46,30 @@ const MainPanel = ({ className }) => {
             </TabList>
           </div>
           <div className="flex-shrink-0 ml-4">
-            <SearchBar />
+            <SearchBar onSearch={handleSearch} />
           </div>
         </div>
 
         <TabPanel className="overflow-y-auto bg-panel-background">
-          <GenericTable config={insumosConfig} />
+          <GenericTable config={insumosConfig} searchQuery={searchQuery}/>
         </TabPanel>
         <TabPanel className="overflow-y-auto bg-panel-background">
-          <GenericTable config={liquidosConfig} />
+          <GenericTable config={liquidosConfig} searchQuery={searchQuery}/>
         </TabPanel>
         <TabPanel className="overflow-y-auto bg-panel-background">
-          <GenericTable config={envasesConfig} />
+          <GenericTable config={envasesConfig} searchQuery={searchQuery}/>
         </TabPanel>
         <TabPanel className="overflow-y-auto bg-panel-background">
-          <GenericTable config={miscelaneaConfig} />
+          <GenericTable config={miscelaneaConfig} searchQuery={searchQuery}/>
         </TabPanel>
         <TabPanel className="overflow-y-auto bg-panel-background">
-          <GenericTable config={packagingConfig} />
+          <GenericTable config={packagingConfig} searchQuery={searchQuery}/>
         </TabPanel>
         <TabPanel className="overflow-y-auto bg-panel-background">
-          <GenericTable config={etiquetasConfig} />
+          <GenericTable config={etiquetasConfig} searchQuery={searchQuery}/>
         </TabPanel>
         <TabPanel className="overflow-y-auto bg-panel-background">
-          <GenericTable config={productosConfig} />
+          <GenericTable config={productosConfig} searchQuery={searchQuery}/>
         </TabPanel>
       </Tabs>
     </div>
