@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TableContainer from "./TableContainer";
-import useTableData from "./useDataTable";
+import useDataTable from "./useDataTable";
 import { HashLoader } from "react-spinners";
 
 export default function GenericTable({ config, searchQuery }) {
@@ -11,11 +11,11 @@ export default function GenericTable({ config, searchQuery }) {
         selectedIndex,
         isLoading,
         handleAddRow,
-        handleEditRow,
         handleDeleteRow,
+        handleEditRow,
         handleRowClick,
         updateStock,
-    } = useTableData({ fields, tableName, apiUrl });
+    } = useDataTable({ fields, tableName, apiUrl });
 
     const [filteredData, setFilteredData] = useState(datos);
 
@@ -41,33 +41,37 @@ export default function GenericTable({ config, searchQuery }) {
             </div>
         );
 
-    const hasStockField = fields.some((field) => field.name === "stock");
-
     return (
         <TableContainer className="overflow-auto h-full flex flex-col bg-options-panel">
             {tableName !== "Insumos" && (
-                <div className="flex justify-between mb-4">
-                    <div className="flex space-x-4">
-                        <button
-                            onClick={() => handleAddRow()}
-                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                        >
-                            Agregar
-                        </button>
-                        <button
-                            onClick={() => handleEditRow()}
-                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                        >
-                            Editar
-                        </button>
-                        <button
-                            onClick={() => handleDeleteRow()}
-                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                        >
-                            Eliminar
-                        </button>
-                    </div>
+            <div className="flex justify-between mb-4">
+                <div className="flex space-x-4">
+                    <button
+                        onClick={() => handleAddRow()}
+                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                    >
+                        Agregar
+                    </button>
+                    <button
+                        onClick={() => handleEditRow()}
+                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                    >
+                        Editar
+                    </button>
+                    <button
+                        onClick={() => handleDeleteRow()}
+                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                    >
+                        Eliminar
+                    </button>
+                    <button
+                        onClick={() => updateStock()}
+                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                    >
+                        Modificar Stock
+                    </button>
                 </div>
+            </div>
             )}
             <table className="min-w-full">
                 <thead>
@@ -80,15 +84,10 @@ export default function GenericTable({ config, searchQuery }) {
                             {field.placeholder}
                         </th>
                     ))}
-                    {hasStockField && (
-                        <th className="px-4 py-2 text-left border-b border-gray-200">
-                            Acciones
-                        </th>
-                    )}
                 </tr>
                 </thead>
                 <tbody>
-                {filteredData.map((fila, index) => ( // Aquí cambiamos datos a filteredData
+                {filteredData.map((fila, index) => (
                     <tr
                         key={index}
                         className={`cursor-pointer ${
@@ -106,22 +105,6 @@ export default function GenericTable({ config, searchQuery }) {
                                     : "indefinido"}
                             </td>
                         ))}
-                        {hasStockField && (
-                            <td className="px-4 py-2 border-b border-gray-200 flex space-x-4">
-                                <button
-                                    onClick={() => updateStock(index, 1)} // Incrementar stock
-                                    className="p-2 bg-green-500 text-white rounded hover:bg-green-600"
-                                >
-                                    +
-                                </button>
-                                <button
-                                    onClick={() => updateStock(index, -1)} // Disminuir stock
-                                    className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
-                                >
-                                    -
-                                </button>
-                            </td>
-                        )}
                     </tr>
                 ))}
                 </tbody>

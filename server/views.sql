@@ -63,7 +63,7 @@ CREATE VIEW productos AS
 SELECT 
     p.nombre_producto AS nombre_producto,
     p.sku AS sku,
-    l.nombre_liquido AS fragancia,  -- Cambiado a nombre_liquido para reflejar el nombre de la fragancia
+    l.nombre_liquido AS fragancia,
     en.volumen AS volumen,
     p.stock AS stock_producto,
     p.precio AS precio_producto
@@ -81,7 +81,7 @@ UNION ALL
 SELECT
     e.nombre_envase AS nombre_producto,
     e.sku AS sku,
-    NULL AS fragancia,
+    '-' AS fragancia,
     e.volumen AS volumen,
     e.stock AS stock_producto,
     e.precio AS precio_producto
@@ -95,8 +95,8 @@ UNION ALL
 SELECT
     m.nombre_objeto AS nombre_producto,
     m.sku AS sku,
-    NULL AS fragancia,
-    NULL AS volumen,
+    '-' AS fragancia,
+    '-' AS volumen,
     m.stock AS stock_producto,
     m.precio AS precio_producto
 FROM

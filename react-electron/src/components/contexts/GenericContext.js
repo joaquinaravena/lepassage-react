@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react';
 
 // Crear el contexto
-const GenericContext = createContext({
+export const GenericContext = createContext({
     data: [],
     isLoading: false,
     fetchData: () => {},
@@ -20,9 +20,6 @@ export const GenericProvider = ({ children }) => {
         setIsLoading(true);
         try {
             const response = await fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error('Error al obtener los datos');
-            }
             const data = await response.json();
             setData(data);
         } catch (error) {
@@ -42,10 +39,6 @@ export const GenericProvider = ({ children }) => {
                 body: JSON.stringify(item),
             });
 
-            if (!response.ok) {
-                throw new Error('Error al agregar el elemento');
-            }
-
             const newItem = await response.json();
             setData((prevData) => [...prevData, newItem]);
         } catch (error) {
@@ -64,10 +57,6 @@ export const GenericProvider = ({ children }) => {
                 body: JSON.stringify(item),
             });
 
-            if (!response.ok) {
-                throw new Error('Error al actualizar el elemento');
-            }
-
             const updatedItem = await response.json();
             setData((prevData) =>
                 prevData.map((dataItem) =>
@@ -82,14 +71,9 @@ export const GenericProvider = ({ children }) => {
     // Función para eliminar un elemento
     const deleteItem = async (apiUrl, itemId) => {
         try {
-            const response = await fetch(`${apiUrl}/${itemId}/`, {
+            await fetch(`${apiUrl}/${itemId}/`, {
                 method: 'DELETE',
             });
-
-            if (!response.ok) {
-                throw new Error('Error al eliminar el elemento');
-            }
-
             setData((prevData) => prevData.filter((item) => item.id !== itemId));
         } catch (error) {
             console.error('Error al eliminar el elemento:', error);

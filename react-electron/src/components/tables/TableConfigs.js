@@ -54,8 +54,9 @@ export const etiquetasConfig = {
 
 export const insumosConfig = {
   fields: [
-    { name: "nombre", placeholder: "Nombre del Insumo" },
+    { name: "nombre", placeholder: "Nombre de Insumo" },
     { name: "sku", placeholder: "SKU" },
+    { name: "tipo", placeholder: "Tipo de Insumo" },
     { name: "stock", placeholder: "Stock" },
     { name: "precio", placeholder: "Precio" },
   ],
@@ -102,7 +103,7 @@ export const PackagingConfig = () => {
 
   return {
     fields,
-    tableName: "Paquetes",
+    tableName: "Packaging",
     apiUrl,
   };
 };
@@ -134,9 +135,11 @@ export const productosConfig = {
   fields: [
     { name: "nombre_producto", placeholder: "Nombre del Producto" },
     { name: "sku", placeholder: "SKU" },
+    { name: "fragancia", placeholder: "Fragancia" },
+    { name: "volumen", placeholder: "Volumen" },
     { name: "stock", placeholder: "Stock" },
     { name: "precio", placeholder: "Precio" },
   ],
   tableName: "Productos",
-  apiUrl: "/api/productos/",
+  apiUrl: "/api/productos_view/",
 };

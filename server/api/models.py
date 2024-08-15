@@ -37,18 +37,17 @@ TIPO_INSUMO_CHOICES = [
     ]
 
 class InsumoView(models.Model):
-    tipo = models.CharField(max_length=10, choices=TIPO_LIQUIDO_CHOICES)
-    id = models.IntegerField(primary_key=True)
+    tipo = models.CharField(max_length=10, choices=TIPO_INSUMO_CHOICES)
     nombre = models.CharField(max_length=45, null=True)
-    sku = models.CharField(max_length=45)
+    sku = models.CharField(max_length=45, primary_key=True)
     volumen = models.PositiveIntegerField(null=True)
     precio = models.DecimalField(max_digits=5, decimal_places=2)
     stock = models.PositiveIntegerField(null=True)
 
     class Meta:
-        managed = False  # No permitir a Django gestionar esta tabla
+        managed = False
         db_table = 'insumos'
-        
+
 class Liquido(models.Model):
     nombre_liquido = models.CharField(max_length=45)
     sku = models.CharField(max_length=45)
@@ -122,14 +121,14 @@ class Producto(models.Model):
 
 class ProductosView(models.Model):
     nombre_producto = models.CharField(max_length=45)
-    sku = models.CharField(max_length=45)
+    sku = models.CharField(max_length=45, primary_key=True)
     fragancia = models.CharField(max_length=45, null=True)
     volumen = models.IntegerField(null=True)
     stock_producto = models.IntegerField()
     precio_producto = models.DecimalField(max_digits=5, decimal_places=2)
 
     class Meta:
-        managed = False  # No permitir a Django gestionar esta tabla
+        managed = False
         db_table = 'productos'
 
 #Tablas de relacion muchos a muchos

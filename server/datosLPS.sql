@@ -70,9 +70,38 @@ INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUE
 INSERT INTO api_paquete (sku, nombre_paquete, precio, stock, tipo_paquete) VALUES ('BOLTUL13x18AlAr', 'Bolsita de tul rosa', 132.00, 100, 'bolsa');
 
 #Objetos
-INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto) VALUES ('SWEVARRAT25x3', 'Varillas de ratan de 25mm x 3mm x U', 43.40, 148, 'varilla');
-INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto) VALUES ('-', 'Varillas de ratan de 23mm x 1.5mm x U', 43.40, 364, 'varilla');
-INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto) VALUES ('MercadoPago', 'Varillas de ratan de 20mm x 3mm x U', 43.40, 2000, 'varilla');
+INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto, vendible) VALUES ('SWEVARRAT25x3', 'Varillas de ratan de 25mm x 3mm x U', 43.40, 148, 'varilla', 1);
+INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto, vendible) VALUES ('-', 'Varillas de ratan de 23mm x 1.5mm x U', 43.40, 364, 'varilla', 1);
+INSERT INTO api_miscelanea (sku, nombre_objeto, precio, stock, tipo_objeto, vendible) VALUES ('MercadoPago', 'Varillas de ratan de 20mm x 3mm x U', 43.40, 2000, 'varilla', 1);
+
+#Etiquetas
+INSERT INTO api_etiqueta (nombre_etiqueta, sku, stock, precio, volumen, id_liquido_id)
+VALUES
+    ('Etiqueta A', 'SKU123', 100, 5.99, 250, 1),
+    ('Etiqueta B', 'SKU124', 150, 7.49, 500, 2),
+    ('Etiqueta C', 'SKU125', 200, 6.99, 750, NULL);
+
+#Productos
+INSERT INTO api_producto (nombre_producto, sku, stock, precio)
+VALUES
+    ('Producto A', 'SKU1001', 150, 29.99),
+    ('Producto B', 'SKU1002', 75, 49.99),
+    ('Producto C', 'SKU1003', 200, 19.99);
+
+
+INSERT INTO api_productomiscelanea (producto_id, miscelanea_id) VALUES (1, 1);
+INSERT INTO api_productomiscelanea (producto_id, miscelanea_id) VALUES (2, 2);
+INSERT INTO api_productomiscelanea (producto_id, miscelanea_id) VALUES (3, 3);
+
+INSERT INTO api_productoenvase (producto_id, envase_id) VALUES (1, 1);
+INSERT INTO api_productoenvase (producto_id, envase_id) VALUES (2, 2);
+INSERT INTO api_productoenvase (producto_id, envase_id) VALUES (3, 3);
+
+INSERT INTO api_productopaquete (producto_id, paquete_id) VALUES (1, 1);
+INSERT INTO api_productopaquete (producto_id, paquete_id) VALUES (2, 2);
+INSERT INTO api_productopaquete (producto_id, paquete_id) VALUES (3, 3);
+
+
 
 
 
