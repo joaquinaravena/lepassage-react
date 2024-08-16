@@ -19,7 +19,9 @@ export const GenericProvider = ({ children }) => {
     const fetchData = async (apiUrl) => {
         setIsLoading(true);
         try {
-            const response = await fetch(apiUrl);
+            const response = await fetch("http://localhost:8000" + apiUrl);
+            console.log(response);
+            console.log(apiUrl);
             const data = await response.json();
             setData(data);
         } catch (error) {
@@ -31,7 +33,7 @@ export const GenericProvider = ({ children }) => {
     // Función para agregar un nuevo elemento
     const addItem = async (apiUrl, item) => {
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch("http://localhost:8000" + apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,16 +42,20 @@ export const GenericProvider = ({ children }) => {
             });
 
             const newItem = await response.json();
+            console.log(response);
+            console.log(apiUrl);
+            console.log(newItem);
             setData((prevData) => [...prevData, newItem]);
         } catch (error) {
             console.error('Error al agregar el elemento:', error);
         }
     };
 
+
     // Función para editar un elemento existente
-    const editItem = async (apiUrl, item) => {
+    const editItem = async (apiUrl, id, item) => {
         try {
-            const response = await fetch(`${apiUrl}/${item.id}/`, {
+            const response = await fetch("http://localhost:8000" + `${apiUrl}${id}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,6 +64,9 @@ export const GenericProvider = ({ children }) => {
             });
 
             const updatedItem = await response.json();
+            console.log(response);
+            console.log(apiUrl);
+            console.log(updatedItem);
             setData((prevData) =>
                 prevData.map((dataItem) =>
                     dataItem.id === updatedItem.id ? updatedItem : dataItem
@@ -68,17 +77,19 @@ export const GenericProvider = ({ children }) => {
         }
     };
 
+
     // Función para eliminar un elemento
-    const deleteItem = async (apiUrl, itemId) => {
+    const deleteItem = async (apiUrl, id) => {
         try {
-            await fetch(`${apiUrl}/${itemId}/`, {
+            await fetch(`${apiUrl}${id}/`, {
                 method: 'DELETE',
             });
-            setData((prevData) => prevData.filter((item) => item.id !== itemId));
+            setData((prevData) => prevData.filter((item) => item.id !== id));
         } catch (error) {
             console.error('Error al eliminar el elemento:', error);
         }
     };
+
 
     return (
         <GenericContext.Provider

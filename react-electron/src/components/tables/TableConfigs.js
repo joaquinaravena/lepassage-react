@@ -1,4 +1,3 @@
-// tableConfigs.js
 import { useState, useEffect } from "react";
 
 const useFetchChoices = (endpoint) => {

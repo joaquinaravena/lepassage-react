@@ -20,7 +20,7 @@ export default function useDataTable({ fields, tableName, apiUrl }) {
       }
       setIsLoading(false);
     };
-
+    console.log("apiUrl", apiUrl);
     fetchDataLocal();
   }, [apiUrl, tableName]);
 
@@ -104,6 +104,9 @@ export default function useDataTable({ fields, tableName, apiUrl }) {
 
       if (formValues && fields.every((field) => formValues[field.name])) {
         // Hacer llamada a la API para actualizar la tabla según tableName
+        console.log("apiUrl", apiUrl);
+        console.log("selectedData.id", selectedData.id);
+        console.log("formValues", formValues);
         editItem(apiUrl, selectedData.id, formValues);
         const updatedDatos = [...datos];
         updatedDatos[selectedIndex] = formValues;

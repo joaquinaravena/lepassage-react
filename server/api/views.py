@@ -10,6 +10,7 @@ from django.http import JsonResponse
 class ProductosViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductosView.objects.all()
     serializer_class = ProductosViewSerializer
+
 class LiquidoViewSet(viewsets.ModelViewSet):
     queryset = Liquido.objects.all()
     serializer_class = LiquidoSerializer
