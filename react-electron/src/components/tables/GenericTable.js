@@ -4,7 +4,7 @@ import useDataTable from "./useDataTable";
 import { HashLoader } from "react-spinners";
 
 export default function GenericTable({ config, searchQuery }) {
-    const { fields, tableName, apiUrl } = config;
+    const { fields, tableName, apiUrl , choices} = config;
 
     const {
         datos,
@@ -15,7 +15,7 @@ export default function GenericTable({ config, searchQuery }) {
         handleEditRow,
         handleRowClick,
         updateStock,
-    } = useDataTable({ fields, tableName, apiUrl });
+    } = useDataTable({ fields, tableName, apiUrl, choices });
 
     const [filteredData, setFilteredData] = useState(datos);
 

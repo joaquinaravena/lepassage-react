@@ -25,7 +25,7 @@ TIPO_ENVASE_CHOICES = [
         ('TIPO2', 'PET'),
         ('TIPO3', 'difusor'),
         ('TIPO4', 'jarabe'),
-        ('TIPO4', 'colirio'),
+        ('TIPO5', 'colirio'),
     ]
 
 TIPO_INSUMO_CHOICES = [

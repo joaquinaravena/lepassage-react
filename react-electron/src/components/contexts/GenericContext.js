@@ -20,8 +20,6 @@ export const GenericProvider = ({ children }) => {
         setIsLoading(true);
         try {
             const response = await fetch("http://localhost:8000" + apiUrl);
-            console.log(response);
-            console.log(apiUrl);
             const data = await response.json();
             setData(data);
         } catch (error) {
@@ -33,6 +31,7 @@ export const GenericProvider = ({ children }) => {
     // Función para agregar un nuevo elemento
     const addItem = async (apiUrl, item) => {
         try {
+            console.log("Datos enviados:", item);
             const response = await fetch("http://localhost:8000" + apiUrl, {
                 method: 'POST',
                 headers: {
@@ -42,9 +41,6 @@ export const GenericProvider = ({ children }) => {
             });
 
             const newItem = await response.json();
-            console.log(response);
-            console.log(apiUrl);
-            console.log(newItem);
             setData((prevData) => [...prevData, newItem]);
         } catch (error) {
             console.error('Error al agregar el elemento:', error);
@@ -64,9 +60,6 @@ export const GenericProvider = ({ children }) => {
             });
 
             const updatedItem = await response.json();
-            console.log(response);
-            console.log(apiUrl);
-            console.log(updatedItem);
             setData((prevData) =>
                 prevData.map((dataItem) =>
                     dataItem.id === updatedItem.id ? updatedItem : dataItem
@@ -81,7 +74,7 @@ export const GenericProvider = ({ children }) => {
     // Función para eliminar un elemento
     const deleteItem = async (apiUrl, id) => {
         try {
-            await fetch(`${apiUrl}${id}/`, {
+            await fetch("http://localhost:8000" + `${apiUrl}${id}/`, {
                 method: 'DELETE',
             });
             setData((prevData) => prevData.filter((item) => item.id !== id));
@@ -89,6 +82,42 @@ export const GenericProvider = ({ children }) => {
             console.error('Error al eliminar el elemento:', error);
         }
     };
+
+    const updateColumn = async (apiUrl, id, columnName, newValue) => {
+        try {
+            const response = await fetch("http://localhost:8000" + `${apiUrl}${id}/`, {
+                method: 'PATCH',  // Usamos PATCH para actualizar solo una parte del objeto
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ [columnName]: newValue }),
+            });
+
+            const updatedItem = await response.json();
+            setData((prevData) =>
+                prevData.map((dataItem) =>
+                    dataItem.id === updatedItem.id ? updatedItem : dataItem
+                )
+            );
+        } catch (error) {
+            console.error('Error al actualizar la columna:', error);
+        }
+    };
+
+    const fetchFragancias = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/api/liquidos/?tipo_liquido=fragancia");
+            if (!response.ok) {
+                throw new Error("Error al obtener las fragancias");
+            }
+            const fragancias = await response.json();
+            return fragancias;
+        } catch (error) {
+            console.error('Error fetching fragancias:', error);
+            return [];
+        }
+    };
+
 
 
     return (
@@ -100,6 +129,8 @@ export const GenericProvider = ({ children }) => {
                 addItem,
                 editItem,
                 deleteItem,
+                updateColumn,
+                fetchFragancias,
             }}
         >
             {children}

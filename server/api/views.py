@@ -15,6 +15,13 @@ class LiquidoViewSet(viewsets.ModelViewSet):
     queryset = Liquido.objects.all()
     serializer_class = LiquidoSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()  # Mantenemos el queryset completo por defecto
+        tipo_liquido = self.request.query_params.get('tipo_liquido')
+        if tipo_liquido:
+            queryset = queryset.filter(tipo_liquido=tipo_liquido)
+        return queryset
+
 class EtiquetaViewSet(viewsets.ModelViewSet):
     queryset = Etiqueta.objects.all()
     serializer_class = EtiquetaSerializer

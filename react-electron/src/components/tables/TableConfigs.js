@@ -1,24 +1,49 @@
 import { useState, useEffect } from "react";
 
-const useFetchChoices = (endpoint) => {
+const useFetchChoices = (endpoint, choicesKey) => {
   const [choices, setChoices] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch(endpoint)
-        .then((response) => response.json())
+    fetch("http://localhost:8000" + endpoint)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
         .then((data) => {
-          setChoices(data.choices || []);
+          // Obtener el key de choices del objeto de datos
+          const choicesData = data[choicesKey];
+          if (choicesData) {
+            console.log('Choices data:', choicesData);
+            // Transformar el formato de datos
+            const transformedChoices = choicesData.map(([value, label]) => ({
+              value,
+              label
+            }));
+            setChoices(transformedChoices);
+          } else {
+            console.warn(`No choices found for key: ${choicesKey}`);
+          }
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching choices:', error);
           setIsLoading(false);
         });
-  }, [endpoint]);
+  }, [endpoint, choicesKey]);
 
   return { choices, isLoading };
 };
 
+
+
+
 export const LiquidosConfig = () => {
   const { choices: tipo_liquido_choices } = useFetchChoices(
-      "/api/tipo-liquido-choices/"
+      "/api/tipo_liquido_choices/",
+        "tipo_liquido_choices"
   );
 
   const fields = [
@@ -36,6 +61,7 @@ export const LiquidosConfig = () => {
     fields,
     tableName: "Líquidos",
     apiUrl,
+    choices: tipo_liquido_choices,
   };
 };
 
@@ -65,7 +91,8 @@ export const insumosConfig = {
 
 export const MiscelaneaConfig = () => {
   const { choices: tipo_objeto_choices } = useFetchChoices(
-      "/api/tipo-objeto-choices/"
+      "/api/tipo_objeto_choices/",
+        "tipo_objeto_choices"
   );
 
   const fields = [
@@ -82,12 +109,14 @@ export const MiscelaneaConfig = () => {
     fields,
     tableName: "Miscelaneos",
     apiUrl,
+    choices: tipo_objeto_choices,
   };
 };
 
 export const PackagingConfig = () => {
   const { choices: tipo_paquete_choices } = useFetchChoices(
-      "/api/tipo-paquete-choices/"
+      "/api/tipo_paquete_choices/",
+        "tipo_paquete_choices"
   );
 
   const fields = [
@@ -104,12 +133,14 @@ export const PackagingConfig = () => {
     fields,
     tableName: "Packaging",
     apiUrl,
+    choices: tipo_paquete_choices,
   };
 };
 
 export const EnvasesConfig = () => {
   const { choices: tipo_envase_choices } = useFetchChoices(
-      "/api/tipo-envase-choices/"
+      "/api/tipo_envase_choices/",
+        "tipo_envase_choices"
   );
 
   const fields = [
@@ -127,6 +158,7 @@ export const EnvasesConfig = () => {
     fields,
     tableName: "Envases",
     apiUrl,
+    choices: tipo_envase_choices,
   };
 };
 
