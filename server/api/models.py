@@ -2,38 +2,38 @@ from django.db import models
 # Create your models here.from django.db import models
 
 TIPO_LIQUIDO_CHOICES = [
-    ('TIP1', 'esencia'),
-    ('TIP2', 'fragancia'),
-    ('TIP3', 'agua'),
-    ('TIP4', 'alcohol'),
+    ('Esencia', 'esencia'),
+    ('Fragancia', 'fragancia'),
+    ('Agua', 'agua'),
+    ('Alcohol', 'alcohol'),
 ]
 
 TIPO_OBJETO_CHOICES = [
-        ('TIPO1', 'varilla'),
-        ('TIPO2', 'lampara'),
-        ('TIPO3', 'colgante'),
-        ('TIPO4', 'accesorio'),
+        ('Varilla', 'varilla'),
+        ('Lampara', 'lampara'),
+        ('Colgante', 'colgante'),
+        ('Accesorio', 'accesorio'),
     ]
 
 TIPO_PAQUETE_CHOICES = [
-        ('TIPO1', 'caja'),
-        ('TIPO2', 'bolsa'),
+        ('Caja', 'caja'),
+        ('Bolsa', 'bolsa'),
     ]
 
 TIPO_ENVASE_CHOICES = [
-        ('TIPO1', 'bidon'),
-        ('TIPO2', 'PET'),
-        ('TIPO3', 'difusor'),
-        ('TIPO4', 'jarabe'),
-        ('TIPO5', 'colirio'),
+        ('Bidon', 'bidon'),
+        ('PET', 'PET'),
+        ('Difusor', 'difusor'),
+        ('Jarabe', 'jarabe'),
+        ('Colirio', 'colirio'),
     ]
 
 TIPO_INSUMO_CHOICES = [
-        ('TIPO1', 'liquido'),
-        ('TIPO2', 'etiqueta'),
-        ('TIPO3', 'miscelanea'),
-        ('TIPO4', 'paquete'),
-        ('TIPO5', 'envase'),
+        ('Liquido', 'liquido'),
+        ('Etiqueta', 'etiqueta'),
+        ('Miscelanea', 'miscelanea'),
+        ('Paquete', 'paquete'),
+        ('Envase', 'envase'),
     ]
 
 class InsumoView(models.Model):
