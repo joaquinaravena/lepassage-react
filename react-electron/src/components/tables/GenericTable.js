@@ -7,7 +7,7 @@ export default function GenericTable({ config, searchQuery }) {
     const { fields, tableName, apiUrl , choices} = config;
 
     const {
-        datos,
+        data,
         selectedIndex,
         isLoading,
         handleAddRow,
@@ -17,22 +17,22 @@ export default function GenericTable({ config, searchQuery }) {
         updateStock,
     } = useDataTable({ fields, tableName, apiUrl, choices });
 
-    const [filteredData, setFilteredData] = useState(datos);
+    const [filteredData, setFilteredData] = useState(data);
 
     useEffect(() => {
         if (searchQuery) {
             const lowerCaseQuery = searchQuery.toLowerCase();
             setFilteredData(
-                datos.filter((fila) =>
+                data.filter((fila) =>
                     fields.some((field) =>
                         fila[field.name]?.toString().toLowerCase().includes(lowerCaseQuery)
                     )
                 )
             );
         } else {
-            setFilteredData(datos);
+            setFilteredData(data);
         }
-    }, [searchQuery, datos, fields]);
+    }, [searchQuery, data, fields]);
 
     if (isLoading)
         return (

@@ -2,26 +2,13 @@ import { useState, useEffect, useContext } from "react";
 import Swal from "sweetalert2";
 import { GenericContext } from "../contexts/GenericContext";
 
-export default function useDataTable({ fields, tableName, apiUrl, choices }) {
-  const { deleteItem, fetchData, addItem, editItem, updateColumn} = useContext(GenericContext);
-  const [datos, setDatos] = useState([]);
+export default function useDataTable({ fields, tableName, apiUrl}) {
+  const { deleteItem, fetchData, addItem, editItem, updateColumn, data, isLoading} = useContext(GenericContext);
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
 
 
   useEffect(() => {
-    const fetchDataLocal = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch("http://localhost:8000" + apiUrl);
-        const data = await response.json();
-        setDatos(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-      setIsLoading(false);
-    };
-    fetchDataLocal();
+    fetchData(apiUrl);
   }, [apiUrl]);
 
   const createInputsHtml = (fields, selectedData) => {
@@ -65,7 +52,6 @@ export default function useDataTable({ fields, tableName, apiUrl, choices }) {
   };
 
   const handleAddRow = async () => {
-    console.log(choices);
     const { value: formValues } = await Swal.fire({
       title: `Agregar en ${tableName}`,
       html: createInputsHtml(fields),
@@ -85,25 +71,28 @@ export default function useDataTable({ fields, tableName, apiUrl, choices }) {
     });
 
     if (formValues && fields.every((field) => formValues[field.name])) {
-      await addItem(apiUrl, formValues);
-      setDatos([...datos, formValues]);
-      Swal.fire(
-          `${tableName} agregado`,
-          `${tableName} ha sido agregado correctamente`,
-          "success"
-      );
+      try {
+        await addItem(apiUrl, formValues);
+        await fetchData(apiUrl);
+
+        await Swal.fire(
+            `${tableName} agregado`,
+            `${tableName} ha sido agregado correctamente`,
+            "success"
+        );
+      } catch (error) {
+        console.error('Error adding row:', error);
+        await Swal.fire("Error", "No se pudo agregar la fila", "error");
+      }
     } else {
-      Swal.fire("Error", "Por favor, completa todos los campos", "error");
+      await Swal.fire("Error", "Por favor, completa todos los campos", "error");
     }
-    console.log(choices);
   };
 
   const handleEditRow = async () => {
     if (selectedIndex !== null) {
-      const selectedData = datos[selectedIndex];
+      const selectedData = data[selectedIndex];
 
-      console.log(selectedData);
-      console.log(fields);
       const { value: formValues } = await Swal.fire({
         title: `Editar ${tableName}`,
         html: createInputsHtml(fields, selectedData),
@@ -124,25 +113,24 @@ export default function useDataTable({ fields, tableName, apiUrl, choices }) {
 
       if (formValues && fields.every((field) => formValues[field.name])) {
         editItem(apiUrl, selectedData.id, formValues);
-        const updatedDatos = [...datos];
-        updatedDatos[selectedIndex] = formValues;
-        setDatos(updatedDatos);
-        Swal.fire(
+        fetchData(apiUrl);
+
+        await Swal.fire(
             `${tableName} actualizado`,
             `${tableName} ha sido actualizado correctamente`,
             "success"
         );
       } else {
-        Swal.fire("Error", "Por favor, completa todos los campos", "error");
+        await Swal.fire("Error", "Por favor, completa todos los campos", "error");
       }
     } else {
-      Swal.fire("Error", "No hay fila seleccionada", "error");
+      await Swal.fire("Error", "No hay fila seleccionada", "error");
     }
   };
 
   const handleDeleteRow = async () => {
     if (selectedIndex !== null) {
-      const selectedData = datos[selectedIndex];
+      const selectedData = data[selectedIndex];
       Swal.fire({
         title: "Eliminar fila",
         text: "No podrás revertir esto",
@@ -156,13 +144,12 @@ export default function useDataTable({ fields, tableName, apiUrl, choices }) {
         if (result.isConfirmed) {
           await deleteItem(apiUrl, selectedData.id);
           await fetchData(apiUrl);
-          setDatos(datos.filter((_, index) => index !== selectedIndex));
           setSelectedIndex(null);
           await Swal.fire("Eliminado", "La fila ha sido eliminada.", "success");
         }
       });
     } else {
-      Swal.fire("Error", "No hay fila seleccionada", "error");
+      await Swal.fire("Error", "No hay fila seleccionada", "error");
     }
   };
 
@@ -188,7 +175,7 @@ export default function useDataTable({ fields, tableName, apiUrl, choices }) {
 
   const updateStock = async () => {
     if (selectedIndex !== null) {
-      const selectedData = datos[selectedIndex];
+      const selectedData = data[selectedIndex];
 
       const isLiquidosTable = tableName === "Líquidos";
 
@@ -223,34 +210,28 @@ export default function useDataTable({ fields, tableName, apiUrl, choices }) {
       });
 
       if (formValues && (isLiquidosTable ? formValues.volumen !== undefined : formValues.stock !== undefined)) {
-        const updatedDatos = [...datos];
         if (isLiquidosTable) {
           await updateColumn(apiUrl, selectedData.id, "volumen", parseFloat(formValues.volumen));
         } else {
           await updateColumn(apiUrl, selectedData.id, "stock", parseFloat(formValues.stock));
         }
+        await fetchData(apiUrl);
 
-        updatedDatos[selectedIndex] = {
-          ...selectedData,
-          ...(isLiquidosTable ? { volumen: parseFloat(formValues.volumen) } : { stock: parseFloat(formValues.stock) }),
-        };
-        setDatos(updatedDatos);
-
-        Swal.fire(
+        await Swal.fire(
             `${isLiquidosTable ? 'Volumen' : 'Stock'} actualizado`,
             `El ${isLiquidosTable ? 'volumen' : 'stock'} ha sido actualizado correctamente`,
             "success"
         );
       } else {
-        Swal.fire("Error", "Por favor, completa el campo correctamente", "error");
+        await Swal.fire("Error", "Por favor, completa el campo correctamente", "error");
       }
     } else {
-      Swal.fire("Error", "No hay fila seleccionada", "error");
+      await Swal.fire("Error", "No hay fila seleccionada", "error");
     }
   };
 
   return {
-    datos,
+    data,
     selectedIndex,
     isLoading,
     handleAddRow,

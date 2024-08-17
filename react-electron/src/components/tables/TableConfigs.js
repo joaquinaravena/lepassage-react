@@ -16,7 +16,6 @@ const useFetchChoices = (endpoint, choicesKey) => {
           // Obtener el key de choices del objeto de datos
           const choicesData = data[choicesKey];
           if (choicesData) {
-            console.log('Choices data:', choicesData);
             // Transformar el formato de datos
             const transformedChoices = choicesData.map(([value, label]) => ({
               value,
