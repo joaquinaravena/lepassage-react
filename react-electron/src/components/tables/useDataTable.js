@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { GenericContext } from "../contexts/GenericContext";
 
 export default function useDataTable({ fields, tableName, apiUrl, choices }) {
-  const { deleteItem, fetchData, addItem, editItem, updateColumn, data } = useContext(GenericContext);
+  const { deleteItem, fetchData, addItem, editItem, updateColumn} = useContext(GenericContext);
   const [datos, setDatos] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,27 +29,28 @@ export default function useDataTable({ fields, tableName, apiUrl, choices }) {
         .map((field, index) => {
           if (field.options) {
             return `
-                    <div style="flex: 1; min-width: 220px;">
-                        <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
-                        <select id="swal-input${index}" class="swal2-input" style="width: 80%;">
-                            ${field.options.map(option => `
-                                <option value="${option.value}" ${selectedData ? (selectedData[field.name] === option.value ? 'selected' : '') : ''}>
-                                    ${option.label}
-                                </option>
-                            `).join('')}
-                        </select>
-                    </div>`;
+          <div style="flex: 1; min-width: 220px;">
+            <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
+            <select id="swal-input${index}" class="swal2-input" style="width: 80%;">
+              ${field.options.map(option => `
+                <option value="${option.value}" ${selectedData && selectedData[field.name] === option.value ? 'selected' : ''}>
+                  ${option.label}
+                </option>
+              `).join('')}
+            </select>
+          </div>`;
           } else {
-            const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "indefinido") : "";
+            const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "") : "";
             return `
-                    <div style="flex: 1; min-width: 220px;">
-                        <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
-                        <input id="swal-input${index}" class="swal2-input" style="width: 80%;" value="${value}" />
-                    </div>`;
+          <div style="flex: 1; min-width: 220px;">
+            <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
+            <input id="swal-input${index}" class="swal2-input" style="width: 80%;" value="${value}" />
+          </div>`;
           }
         })
         .join("")}</div>`;
   };
+
 
   const getFormValues = (fields) => {
     return fields.reduce((acc, field, index) => {
@@ -100,6 +101,9 @@ export default function useDataTable({ fields, tableName, apiUrl, choices }) {
   const handleEditRow = async () => {
     if (selectedIndex !== null) {
       const selectedData = datos[selectedIndex];
+
+      console.log(selectedData);
+      console.log(fields);
       const { value: formValues } = await Swal.fire({
         title: `Editar ${tableName}`,
         html: createInputsHtml(fields, selectedData),
