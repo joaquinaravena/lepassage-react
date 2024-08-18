@@ -46,44 +46,48 @@ export default function GenericTable({ config, searchQuery }) {
 
     return (
         <TableContainer className="overflow-auto h-full flex flex-col bg-options-panel">
-            {tableName !== "Insumos" && (
-                <div className="flex justify-between mb-4">
-                    <div className="flex space-x-4">
+            <div className="flex justify-between mb-4">
+                <div className="flex space-x-4">
+                    {tableName !== "Insumos" && (
                         <button
                             onClick={() => handleAddRow()}
                             className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
                         >
                             Agregar
                         </button>
+                    )}
+                    {tableName !== "Insumos" && (
                         <button
                             onClick={() => handleEditRow()}
                             className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
                         >
                             Editar
                         </button>
+                    )}{tableName !== "Insumos" && (
                         <button
                             onClick={() => handleDeleteRow()}
                             className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
                         >
                             Eliminar
                         </button>
+                    )}{tableName !== "Insumos" && (
                         <button
                             onClick={() => updateStock()}
                             className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
                         >
                             Modificar Stock
                         </button>
+                    )}
+                </div>
+                <div className="flex border-2 flex-col items-end mb-4 space-y-2">
+                    <div className="text-right">
+                        <p className="text-sm font-medium">Costo total: $</p>
                     </div>
-                    <div className="flex border-2 flex-col items-end mb-4 space-y-2">
-                        <div className="text-right">
-                            <p className="text-sm font-medium">Costo total: $</p>
-                        </div>
-                        <div className="text-right">
-                            <p className="text-sm font-medium">Costo total {tableName}: ${costoTotalTablaActual}</p>
-                        </div>
+                    <div className="text-right">
+                        <p className="text-sm font-medium">Costo total {tableName}: ${costoTotalTablaActual}</p>
                     </div>
                 </div>
-            )}
+            </div>
             <table className="min-w-full">
                 <thead>
                 <tr>
