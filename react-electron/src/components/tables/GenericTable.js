@@ -41,37 +41,48 @@ export default function GenericTable({ config, searchQuery }) {
             </div>
         );
 
+    const costoTotalTablaActual = filteredData.reduce((acc, curr) => acc + parseFloat(curr.precio) || 0, 0);
+
+
     return (
         <TableContainer className="overflow-auto h-full flex flex-col bg-options-panel">
             {tableName !== "Insumos" && (
-            <div className="flex justify-between mb-4">
-                <div className="flex space-x-4">
-                    <button
-                        onClick={() => handleAddRow()}
-                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                    >
-                        Agregar
-                    </button>
-                    <button
-                        onClick={() => handleEditRow()}
-                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                    >
-                        Editar
-                    </button>
-                    <button
-                        onClick={() => handleDeleteRow()}
-                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                    >
-                        Eliminar
-                    </button>
-                    <button
-                        onClick={() => updateStock()}
-                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                    >
-                        Modificar Stock
-                    </button>
+                <div className="flex justify-between mb-4">
+                    <div className="flex space-x-4">
+                        <button
+                            onClick={() => handleAddRow()}
+                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                        >
+                            Agregar
+                        </button>
+                        <button
+                            onClick={() => handleEditRow()}
+                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                        >
+                            Editar
+                        </button>
+                        <button
+                            onClick={() => handleDeleteRow()}
+                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                        >
+                            Eliminar
+                        </button>
+                        <button
+                            onClick={() => updateStock()}
+                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                        >
+                            Modificar Stock
+                        </button>
+                    </div>
+                    <div className="flex border-2 flex-col items-end mb-4 space-y-2">
+                        <div className="text-right">
+                            <p className="text-sm font-medium">Costo total: $</p>
+                        </div>
+                        <div className="text-right">
+                            <p className="text-sm font-medium">Costo total {tableName}: ${costoTotalTablaActual}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
             )}
             <table className="min-w-full">
                 <thead>
@@ -81,7 +92,7 @@ export default function GenericTable({ config, searchQuery }) {
                             key={field.name}
                             className="px-4 py-2 text-left border-b border-gray-200"
                         >
-                            {field.placeholder}
+                        {field.placeholder}
                         </th>
                     ))}
                 </tr>
