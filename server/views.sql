@@ -81,7 +81,7 @@ UNION ALL
 SELECT
     e.nombre_envase AS nombre_producto,
     e.sku AS sku,
-    '-' AS fragancia,
+    NULL AS fragancia,
     e.volumen AS volumen,
     e.stock AS stock_producto,
     e.precio AS precio_producto
@@ -95,8 +95,8 @@ UNION ALL
 SELECT
     m.nombre_objeto AS nombre_producto,
     m.sku AS sku,
-    '-' AS fragancia,
-    '-' AS volumen,
+    NULL AS fragancia,
+    NULL AS volumen,
     m.stock AS stock_producto,
     m.precio AS precio_producto
 FROM
