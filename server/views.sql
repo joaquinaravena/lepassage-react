@@ -2,8 +2,8 @@ USE lepassage;
 
 CREATE VIEW insumos AS
 SELECT
-    'liquido' AS tipo,
-    nombre_liquido AS nombre,
+    'Liquido' AS tipo,
+    nombre AS nombre,
     sku,
     volumen,
     NULL AS stock,
@@ -14,8 +14,8 @@ FROM
 UNION ALL
 
 SELECT
-    'etiqueta' AS tipo,
-    nombre_etiqueta AS nombre,
+    'Etiqueta' AS tipo,
+    nombre AS nombre,
     sku,
     volumen,
     stock,
@@ -26,8 +26,8 @@ FROM
 UNION ALL
 
 SELECT
-    'miscelanea' AS tipo,
-    nombre_objeto AS nombre,
+    'Miscelanea' AS tipo,
+    nombre AS nombre,
     sku,
     NULL AS volumen,
     stock,
@@ -38,8 +38,8 @@ FROM
 UNION ALL
 
 SELECT
-    'paquete' AS tipo,
-    nombre_paquete AS nombre,
+    'Paquete' AS tipo,
+    nombre AS nombre,
     sku,
     NULL AS volumen,
     stock,
@@ -50,8 +50,8 @@ FROM
 UNION ALL
 
 SELECT
-    'envase' AS tipo,
-    nombre_envase AS nombre,
+    'Envase' AS tipo,
+    nombre AS nombre,
     sku,
     volumen,
     stock,
@@ -61,12 +61,12 @@ FROM
 
 CREATE VIEW productos AS
 SELECT 
-    p.nombre_producto AS nombre_producto,
+    p.nombre AS nombre,
     p.sku AS sku,
-    l.nombre_liquido AS fragancia,
+    l.nombre AS fragancia,
     en.volumen AS volumen,
-    p.stock AS stock_producto,
-    p.precio AS precio_producto
+    p.stock AS stock,
+    p.precio AS precio
 FROM
     api_producto p
 JOIN
@@ -79,26 +79,26 @@ LEFT JOIN
 UNION ALL
 
 SELECT
-    e.nombre_envase AS nombre_producto,
+    e.nombre AS nombre,
     e.sku AS sku,
     NULL AS fragancia,
     e.volumen AS volumen,
-    e.stock AS stock_producto,
-    e.precio AS precio_producto
+    e.stock AS stock,
+    e.precio AS precio
 FROM
     api_envase e
 WHERE
-    e.tipo_envase = 'difusor'
+    e.tipo = 'Difusor'
 
 UNION ALL
 
 SELECT
-    m.nombre_objeto AS nombre_producto,
+    m.nombre AS nombre,
     m.sku AS sku,
     NULL AS fragancia,
     NULL AS volumen,
-    m.stock AS stock_producto,
-    m.precio AS precio_producto
+    m.stock AS stock,
+    m.precio AS precio
 FROM
     api_miscelanea m
 WHERE
