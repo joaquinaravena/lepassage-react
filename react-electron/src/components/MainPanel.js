@@ -8,11 +8,12 @@ import {
   PackagingConfig,
   etiquetasConfig,
   MiscelaneaConfig,
-  productosConfig,
+  productos_viewConfig,
 } from "./tables/TableConfigs";
 import GenericTable from "./tables/GenericTable";
 import SearchBar from "./SearchBar";
 import "./styles/styleBar.css";
+import {ProductosProvider} from "./contexts/ProductosContext";
 
 const MainPanel = ({ className }) => {
   const liquidosConfig = LiquidosConfig();
@@ -68,9 +69,11 @@ const MainPanel = ({ className }) => {
         <TabPanel className="overflow-y-auto bg-panel-background">
           <GenericTable config={etiquetasConfig} searchQuery={searchQuery}/>
         </TabPanel>
+        <ProductosProvider>
         <TabPanel className="overflow-y-auto bg-panel-background">
-          <GenericTable config={productosConfig} searchQuery={searchQuery}/>
+          <GenericTable config={productos_viewConfig} searchQuery={searchQuery}/>
         </TabPanel>
+        </ProductosProvider>
       </Tabs>
     </div>
   );

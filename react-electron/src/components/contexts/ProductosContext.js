@@ -1,34 +1,32 @@
 import React, { createContext, useState } from 'react';
 
 export const ProductosContext = createContext({
-    data: [],
-    isLoading: false,
-    fetchData: () => {},
-    addItem: () => {},
-    editItem: () => {},
-    deleteItem: () => {},
+    dataProducto: [],
+    isLoadingProducto: false,
+    fetchDataProducto: () => {},
+    addItemProducto: () => {},
+    editItemProducto: () => {},
+    deleteItemProducto: () => {},
 });
 
 // Proveedor del contexto
 export const ProductosProvider = ({ children }) => {
-    const [data, setData] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [dataProducto, setDataProducto] = useState([]);
+    const [isLoadingProducto, setIsLoadingProducto] = useState(false);
     const apiUrl = "/api/productos/";
 
-    // Función para obtener los datos desde la API
     const fetchDataProducto = async () => {
-        setIsLoading(true);
+        setIsLoadingProducto(true);
         try {
             const response = await fetch("http://localhost:8000" + apiUrl);
             const data = await response.json();
-            setData(data);
+            setDataProducto(data);
         } catch (error) {
             console.error('Error al obtener los datos:', error);
         }
-        setIsLoading(false);
+        setIsLoadingProducto(false);
     };
 
-    // Función para agregar un nuevo elemento
     const addItemProducto = async (item) => {
         try {
             console.log("Datos enviados:", item);
@@ -41,14 +39,12 @@ export const ProductosProvider = ({ children }) => {
             });
 
             const newItem = await response.json();
-            setData((prevData) => [...prevData, newItem]);
+            setDataProducto((prevData) => [...prevData, newItem]);
         } catch (error) {
             console.error('Error al agregar el elemento:', error);
         }
     };
 
-
-    // Función para editar un elemento existente
     const editItemProducto = async (id, item) => {
         try {
             const response = await fetch("http://localhost:8000" + `${apiUrl}${id}/`, {
@@ -60,7 +56,7 @@ export const ProductosProvider = ({ children }) => {
             });
 
             const updatedItem = await response.json();
-            setData((prevData) =>
+            setDataProducto((prevData) =>
                 prevData.map((dataItem) =>
                     dataItem.id === updatedItem.id ? updatedItem : dataItem
                 )
@@ -71,13 +67,12 @@ export const ProductosProvider = ({ children }) => {
     };
 
 
-    // Función para eliminar un elemento
     const deleteItemProducto = async (id) => {
         try {
             await fetch("http://localhost:8000" + `${apiUrl}${id}/`, {
                 method: 'DELETE',
             });
-            setData((prevData) => prevData.filter((item) => item.id !== id));
+            setDataProducto((prevData) => prevData.filter((item) => item.id !== id));
         } catch (error) {
             console.error('Error al eliminar el elemento:', error);
         }
@@ -94,7 +89,7 @@ export const ProductosProvider = ({ children }) => {
             });
 
             const updatedItem = await response.json();
-            setData((prevData) =>
+            setDataProducto((prevData) =>
                 prevData.map((dataItem) =>
                     dataItem.id === updatedItem.id ? updatedItem : dataItem
                 )
@@ -105,20 +100,19 @@ export const ProductosProvider = ({ children }) => {
     };
 
     return (
-        <GenericContext.Provider
+        <ProductosContext.Provider
             value={{
-                data,
-                isLoading,
-                fetchData,
-                addItem,
-                editItem,
-                deleteItem,
-                updateColumn,
-                fetchFragancias,
+                data: dataProducto,
+                isLoading: isLoadingProducto,
+                fetchDataProducto,
+                addItemProducto,
+                editItemProducto,
+                deleteItemProducto,
+                updateColumnProducto,
             }}
         >
             {children}
-        </GenericContext.Provider>
+        </ProductosContext.Provider>
     );
 };
 

@@ -1,9 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import Swal from "sweetalert2";
-import { GenericContext } from "../contexts/GenericContext";
+import { GenericContext} from "../contexts/GenericContext";
+import { ProductosContext} from "../contexts/ProductosContext";
 
 export default function useDataTable({ fields, tableName, apiUrl}) {
   const { deleteItem, fetchData, addItem, editItem, updateColumn, data, isLoading} = useContext(GenericContext);
+  const { deleteItemProducto, addItemProducto, dataProducto, editItemProducto, fetchDataProducto } = useContext(ProductosContext);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
 

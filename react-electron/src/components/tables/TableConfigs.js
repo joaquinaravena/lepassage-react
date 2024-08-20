@@ -46,9 +46,9 @@ export const LiquidosConfig = () => {
   );
 
   const fields = [
-    { name: "nombre_liquido", placeholder: "Nombre del Líquido" },
+    { name: "nombre", placeholder: "Nombre del Líquido" },
     { name: "sku", placeholder: "SKU" },
-    { name: "tipo_liquido", placeholder: "Tipo de Líquido", options: tipo_liquido_choices },
+    { name: "tipo", placeholder: "Tipo de Líquido", options: tipo_liquido_choices },
     { name: "volumen", placeholder: "Volumen" },
     { name: "precio", placeholder: "Precio" },
     { name: "vencimiento", placeholder: "Vencimiento", type: "date" },
@@ -66,7 +66,7 @@ export const LiquidosConfig = () => {
 
 export const etiquetasConfig = {
   fields: [
-    { name: "nombre_etiqueta", placeholder: "Nombre de la Etiqueta" },
+    { name: "nombre", placeholder: "Nombre de la Etiqueta" },
     { name: "sku", placeholder: "SKU" },
     { name: "volumen", placeholder: "Volumen" },
     { name: "stock", placeholder: "Stock" },
@@ -95,9 +95,9 @@ export const MiscelaneaConfig = () => {
   );
 
   const fields = [
-    { name: "nombre_objeto", placeholder: "Nombre del Producto" },
+    { name: "nombre", placeholder: "Nombre del Producto" },
     { name: "sku", placeholder: "SKU" },
-    { name: "tipo_objeto", placeholder: "Tipo de Objeto", options: tipo_objeto_choices },
+    { name: "tipo", placeholder: "Tipo de Objeto", options: tipo_objeto_choices },
     { name: "stock", placeholder: "Stock" },
     { name: "precio", placeholder: "Precio" },
   ];
@@ -119,9 +119,9 @@ export const PackagingConfig = () => {
   );
 
   const fields = [
-    { name: "nombre_paquete", placeholder: "Nombre del Paquete" },
+    { name: "nombre", placeholder: "Nombre del Paquete" },
     { name: "sku", placeholder: "SKU" },
-    { name: "tipo_paquete", placeholder: "Tipo de Paquete", options: tipo_paquete_choices },
+    { name: "tipo", placeholder: "Tipo de Paquete", options: tipo_paquete_choices },
     { name: "stock", placeholder: "Stock" },
     { name: "precio", placeholder: "Precio" },
   ];
@@ -143,9 +143,9 @@ export const EnvasesConfig = () => {
   );
 
   const fields = [
-    { name: "nombre_envase", placeholder: "Nombre del Envase" },
+    { name: "nombre", placeholder: "Nombre del Envase" },
     { name: "sku", placeholder: "SKU" },
-    { name: "tipo_envase", placeholder: "Tipo de Envase", options: tipo_envase_choices },
+    { name: "tipo", placeholder: "Tipo de Envase", options: tipo_envase_choices },
     { name: "volumen", placeholder: "Volumen" },
     { name: "stock", placeholder: "Stock" },
     { name: "precio", placeholder: "Precio" },
@@ -161,15 +161,30 @@ export const EnvasesConfig = () => {
   };
 };
 
-export const productosConfig = {
+export const productos_viewConfig = {
   fields: [
-    { name: "nombre_producto", placeholder: "Nombre del Producto" },
+    { name: "nombre", placeholder: "Nombre del Producto" },
     { name: "sku", placeholder: "SKU" },
     { name: "fragancia", placeholder: "Fragancia" },
     { name: "volumen", placeholder: "Volumen" },
-    { name: "stock_producto", placeholder: "Stock" },
-    { name: "precio_producto", placeholder: "Precio" },
+    { name: "stock", placeholder: "Stock" },
+    { name: "precio", placeholder: "Precio" },
   ],
   tableName: "Productos",
   apiUrl: "/api/productos_view/",
 };
+
+export const productosConfig = {
+  fields: [
+    { name: "nombre", placeholder: "Nombre del Producto" },
+    { name: "sku", placeholder: "SKU" },
+    { name: "stock", placeholder: "Stock" },
+    { name: "precio", placeholder: "Precio" },
+  ],
+  tableName: "Productos",
+  apiUrl: "/api/productos/",
+};
+
+
+
+

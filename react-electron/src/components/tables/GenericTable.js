@@ -41,8 +41,7 @@ export default function GenericTable({ config, searchQuery }) {
             </div>
         );
 
-    const costoTotalTablaActual = filteredData.reduce((acc, curr) => acc + parseFloat(curr.precio) || 0, 0);
-
+    const costoTotalTablaActual = filteredData.reduce((acc, curr) => acc + parseFloat(curr.precio) || 0, 0).toFixed(2);
 
     return (
         <TableContainer className="overflow-auto h-full flex flex-col bg-options-panel">
@@ -75,7 +74,15 @@ export default function GenericTable({ config, searchQuery }) {
                             onClick={() => updateStock()}
                             className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
                         >
-                            Modificar Stock
+                            Ingresar Stock
+                        </button>
+                    )}
+                    {tableName !== "Insumos" && (
+                        <button
+                            onClick={() => updateStock()}
+                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                        >
+                            Egresar Stock
                         </button>
                     )}
                 </div>
