@@ -1,10 +1,47 @@
 import { useState, useEffect, useContext } from "react";
 import Swal from "sweetalert2";
-import { GenericContext} from "../contexts/GenericContext";
+import { GenericContext } from "../contexts/GenericContext";
+import '../styles/styleSelect.css'
 
-export default function useDataTable({ fields, tableName, apiUrl}) {
-  const { deleteItem, fetchData, addItem, editItem, updateColumn, data, isLoading} = useContext(GenericContext);
+export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrlTable }) {
+  const { deleteItem, fetchData, addItem, editItem, updateColumn, data, isLoading } = useContext(GenericContext);
   const [selectedIndex, setSelectedIndex] = useState(null);
+
+  // Estado para las opciones de misceláneas, envases y paquetes
+  const [options, setOptions] = useState({
+    miscelaneas: [],
+    envases: [],
+    paquetes: [],
+  });
+
+  // Función para cargar opciones de un campo desde la API
+  const loadOptions = async (url, fieldName) => {
+    try {
+      const response = await fetch("http://localhost:8000" + url);
+      const result = await response.json();
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        [fieldName]: result.map((item) => ({ value: item.id, label: item.nombre })), // Ajusta esto según el formato de datos
+      }));
+    } catch (error) {
+    }
+  };
+
+  // Efecto para cargar las opciones de multi-select cuando se abra el formulario
+  const loadAllOptions = async () => {
+    const fieldsWithOptions = fieldsTable.filter((field) => field.type === "multi-select");
+    for (const field of fieldsWithOptions) {
+      await loadOptions(field.optionsUrl, field.name);
+    }
+  };
+
+  useEffect(() => {
+    const loadAllOptions = async () => {
+      const fieldsWithOptions = fieldsTable.filter((field) => field.type === "multi-select");
+      await Promise.all(fieldsWithOptions.map(field => loadOptions(field.optionsUrl, field.name)));
+    };
+    loadAllOptions().then(r => console.log('Opciones cargadas:', r));
+  }, [fieldsTable]);
 
   useEffect(() => {
     fetchData(apiUrl);
@@ -13,37 +50,36 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
   const createInputsHtml = (fields, selectedData) => {
     return `<div style="display: flex; flex-wrap: wrap; gap: 15px;">${fields
         .map((field, index) => {
-          if (field.options) {
-            console.log('opcion Name:', field.options);
+          if (field.type === "multi-select") {
+            console.log('opcion Name:', options[field.name]);
             return `
-          <div style="flex: 1; min-width: 220px;">
-            <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
-            <select id="swal-input${index}" class="swal2-input" style="width: 80%;">
-              ${field.options.map(option => `
-                <option value="${option.value}" ${selectedData && selectedData[field.name] === option.value ? 'selected' : ''}>
-                  ${option.label}
-                </option>
-              `).join('')}
-            </select>
-          </div>`;
+        <div style="flex: 1; min-width: 220px;">
+          <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
+          <select id="swal-input${index}" class="swal2-input" style="width: 100%;">
+            ${options[field.name]?.map(option => `
+              <option value="${option.value}" ${selectedData && selectedData[field.name]?.includes(option.value) ? 'selected' : ''}>
+                ${option.label}
+              </option>
+            `).join('')}
+          </select>
+        </div>`;
           } else {
             const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "") : "";
             return `
-          <div style="flex: 1; min-width: 220px;">
-            <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
-            <input id="swal-input${index}" class="swal2-input" style="width: 80%;" value="${value}" />
-          </div>`;
+        <div style="flex: 1; min-width: 220px;">
+          <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
+          <input id="swal-input${index}" class="swal2-input" style="width: 100%;" value="${value}" />
+        </div>`;
           }
-        })
-        .join("")}</div>`;
+        }).join("")}</div>`;
   };
 
 
   const getFormValues = (fields) => {
     return fields.reduce((acc, field, index) => {
       const element = document.getElementById(`swal-input${index}`);
-      if (element.tagName === 'SELECT') {
-        acc[field.name] = element.value;
+      if (field.type === "multi-select") {
+        acc[field.name] = Array.from(element.selectedOptions).map(option => option.value);
       } else {
         acc[field.name] = element.value;
       }
@@ -52,11 +88,16 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
   };
 
   const handleAddRow = async () => {
+    await loadAllOptions(); // Cargamos las opciones antes de abrir el formulario
+    //Verificar opciones
+    console.log(options);
+
+
     const { value: formValues } = await Swal.fire({
       title: `Agregar en ${tableName}`,
-      html: createInputsHtml(fields),
+      html: createInputsHtml(fieldsTable), // Usamos fieldsTable para incluir los multi-selects
       focusConfirm: false,
-      preConfirm: () => getFormValues(fields),
+      preConfirm: () => getFormValues(fieldsTable),
       didOpen: () => {
         const inputElements = document.querySelectorAll(".swal2-input");
         inputElements.forEach((input) => {
@@ -70,9 +111,9 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
       },
     });
 
-    if (formValues && fields.every((field) => formValues[field.name])) {
+    if (formValues && fieldsTable.every((field) => formValues[field.name])) {
       try {
-        await addItem(apiUrl, formValues);
+        await addItem(apiUrlTable, formValues);
         await fetchData(apiUrl);
 
         await Swal.fire(
@@ -81,7 +122,7 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
             "success"
         );
       } catch (error) {
-        console.error('Error adding row:', error);
+        console.error("Error adding row:", error);
         await Swal.fire("Error", "No se pudo agregar la fila", "error");
       }
     } else {
@@ -93,11 +134,13 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
     if (selectedIndex !== null) {
       const selectedData = data[selectedIndex];
 
+      await loadAllOptions(); // Cargamos las opciones antes de abrir el formulario
+
       const { value: formValues } = await Swal.fire({
         title: `Editar ${tableName}`,
-        html: createInputsHtml(fields, selectedData),
+        html: createInputsHtml(fieldsTable, selectedData), // Usamos fieldsTable para incluir los multi-selects
         focusConfirm: false,
-        preConfirm: () => getFormValues(fields),
+        preConfirm: () => getFormValues(fieldsTable),
         didOpen: () => {
           const inputElements = document.querySelectorAll(".swal2-input");
           inputElements.forEach((input) => {
@@ -111,9 +154,9 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
         },
       });
 
-      if (formValues && fields.every((field) => formValues[field.name])) {
-        editItem(apiUrl, selectedData.id, formValues);
-        fetchData(apiUrl);
+      if (formValues && fieldsTable.every((field) => formValues[field.name])) {
+        editItem(apiUrlTable, selectedData.id, formValues); // Usamos apiUrlTable para actualizar
+        fetchData(apiUrl); // Actualizamos los datos
 
         await Swal.fire(
             `${tableName} actualizado`,
@@ -127,6 +170,7 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
       await Swal.fire("Error", "No hay fila seleccionada", "error");
     }
   };
+
 
   const handleDeleteRow = async () => {
     if (selectedIndex !== null) {
@@ -142,8 +186,8 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
         cancelButtonText: "Cancelar",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await deleteItem(apiUrl, selectedData.id);
-          await fetchData(apiUrl);
+          await deleteItem(apiUrlTable, selectedData.id);
+          await fetchData(apiUrlTable);
           setSelectedIndex(null);
           await Swal.fire("Eliminado", "La fila ha sido eliminada.", "success");
         }
@@ -160,18 +204,6 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
       setSelectedIndex(index);
     }
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      const tableContainer = document.querySelector(".table-container");
-      if (tableContainer && !tableContainer.contains(event.target)) {
-        setSelectedIndex(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const updateStock = async () => {
     if (selectedIndex !== null) {

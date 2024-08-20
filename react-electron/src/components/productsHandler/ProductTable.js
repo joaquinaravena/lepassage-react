@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import TableContainer from "./TableContainer";
-import useDataTable from "./useDataTable";
 import { HashLoader } from "react-spinners";
+import useProductTable from "./useProductTable";
+import TableContainer from "../tables/TableContainer";
 
-export default function GenericTable({ config, searchQuery }) {
-    const { fields, tableName, apiUrl } = config;
+export default function ProductTable({ viewConfig, productConfig, searchQuery }) {
+    const { fields, tableName, apiUrl } = viewConfig; // Fields de la vista
+    const { fieldsTable, apiUrlTable } = productConfig; // Fields de la tabla real
 
     const {
         data,
@@ -15,7 +16,7 @@ export default function GenericTable({ config, searchQuery }) {
         handleEditRow,
         handleRowClick,
         updateStock,
-    } = useDataTable({ fields, tableName, apiUrl });
+    } = useProductTable({ tableName, apiUrl, fieldsTable, apiUrlTable });
 
     const [filteredData, setFilteredData] = useState(data);
 
@@ -47,44 +48,36 @@ export default function GenericTable({ config, searchQuery }) {
         <TableContainer className="overflow-auto h-full flex flex-col bg-options-panel">
             <div className="flex justify-between mb-4">
                 <div className="flex space-x-4">
-                    {tableName !== "Insumos" && (
-                        <button
-                            onClick={() => handleAddRow()}
-                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                        >
-                            Agregar
-                        </button>
-                    )}
-                    {tableName !== "Insumos" && (
-                        <button
-                            onClick={() => handleEditRow()}
-                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                        >
-                            Editar
-                        </button>
-                    )}{tableName !== "Insumos" && (
-                        <button
-                            onClick={() => handleDeleteRow()}
-                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                        >
-                            Eliminar
-                        </button>
-                    )}{tableName !== "Insumos" && (
-                        <button
-                            onClick={() => updateStock()}
-                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                        >
-                            Ingresar Stock
-                        </button>
-                    )}
-                    {tableName !== "Insumos" && (
-                        <button
-                            onClick={() => updateStock()}
-                            className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
-                        >
-                            Egresar Stock
-                        </button>
-                    )}
+                    <button
+                        onClick={() => handleAddRow()}
+                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                    >
+                        Agregar
+                    </button>
+                    <button
+                        onClick={() => handleEditRow()}
+                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                    >
+                        Editar
+                    </button>
+                    <button
+                        onClick={() => handleDeleteRow()}
+                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                    >
+                        Eliminar
+                    </button>
+                    <button
+                        onClick={() => updateStock()}
+                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                    >
+                        Ingresar Stock
+                    </button>
+                    <button
+                        onClick={() => updateStock()}
+                        className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
+                    >
+                        Egresar Stock
+                    </button>
                 </div>
                 <div className="flex border-2 flex-col items-end mb-4 space-y-2">
                     <div className="text-right">
@@ -103,7 +96,7 @@ export default function GenericTable({ config, searchQuery }) {
                             key={field.name}
                             className="px-4 py-2 text-left border-b border-gray-200"
                         >
-                        {field.placeholder}
+                            {field.placeholder}
                         </th>
                     ))}
                 </tr>

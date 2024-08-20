@@ -104,22 +104,6 @@ export const GenericProvider = ({ children }) => {
         }
     };
 
-    const fetchFragancias = async () => {
-        try {
-            const response = await fetch("http://localhost:8000/api/liquidos/?tipo_liquido=fragancia");
-            if (!response.ok) {
-                throw new Error("Error al obtener las fragancias");
-            }
-            const fragancias = await response.json();
-            return fragancias;
-        } catch (error) {
-            console.error('Error fetching fragancias:', error);
-            return [];
-        }
-    };
-
-
-
     return (
         <GenericContext.Provider
             value={{
@@ -130,7 +114,6 @@ export const GenericProvider = ({ children }) => {
                 editItem,
                 deleteItem,
                 updateColumn,
-                fetchFragancias,
             }}
         >
             {children}

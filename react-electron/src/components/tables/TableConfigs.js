@@ -175,15 +175,34 @@ export const productos_viewConfig = {
 };
 
 export const productosConfig = {
-  fields: [
+  fieldsTable: [
     { name: "nombre", placeholder: "Nombre del Producto" },
     { name: "sku", placeholder: "SKU" },
     { name: "stock", placeholder: "Stock" },
     { name: "precio", placeholder: "Precio" },
+    {
+      name: "miscelaneas",
+      placeholder: "Miscelaneas",
+      type: "multi-select", // Tipo multi-select
+      optionsUrl: "/api/miscelaneas/", // URL para obtener las opciones
+    },
+    {
+      name: "envases",
+      placeholder: "Envases",
+      type: "multi-select", // Tipo multi-select
+      optionsUrl: "/api/envases/", // URL para obtener las opciones
+    },
+    {
+      name: "paquetes",
+      placeholder: "Packaging",
+      type: "multi-select", // Tipo multi-select
+      optionsUrl: "/api/paquetes/", // URL para obtener las opciones
+    },
   ],
   tableName: "Productos",
-  apiUrl: "/api/productos/",
+  apiUrlTable: "/api/productos/",
 };
+
 
 
 

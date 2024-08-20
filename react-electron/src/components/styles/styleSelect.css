@@ -1,0 +1,17 @@
+
+.swal2-input[multiple] {
+    height: auto;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #dcdcdc;
+}
+
+/* Estilo básico para los inputs */
+.swal2-input {
+    box-sizing: border-box;
+    font-size: 20px;
+    line-height: 1.5;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    padding: 8px 12px;
+}
