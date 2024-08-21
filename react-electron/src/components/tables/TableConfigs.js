@@ -49,8 +49,8 @@ export const LiquidosConfig = () => {
     { name: "nombre", placeholder: "Nombre del Líquido" },
     { name: "sku", placeholder: "SKU" },
     { name: "tipo", placeholder: "Tipo de Líquido", options: tipo_liquido_choices },
-    { name: "volumen", placeholder: "Volumen" },
-    { name: "precio", placeholder: "Precio" },
+    { name: "volumen", placeholder: "Volumen (ml)" },
+    { name: "precio", placeholder: "Precio por Litro" },
     { name: "vencimiento", placeholder: "Vencimiento", type: "date" },
   ];
 
@@ -178,6 +178,13 @@ export const productosConfig = {
   fieldsTable: [
     { name: "nombre", placeholder: "Nombre del Producto" },
     { name: "sku", placeholder: "SKU" },
+    {
+      name: "id_liquido",
+      placeholder: "Fragancias",
+      type: "select",
+      optionsUrl: "/api/liquidos/",
+      filterType: "Fragancia"
+    },
     { name: "stock", placeholder: "Stock" },
     { name: "precio", placeholder: "Precio" },
     {

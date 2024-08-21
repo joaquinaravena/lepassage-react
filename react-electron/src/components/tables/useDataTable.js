@@ -14,7 +14,7 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
     return `<div style="display: flex; flex-wrap: wrap; gap: 15px;">${fields
         .map((field, index) => {
           if (field.options) {
-            console.log('opcion Name:', field.options);
+            // Renderizar select
             return `
           <div style="flex: 1; min-width: 220px;">
             <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
@@ -26,7 +26,16 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
               `).join('')}
             </select>
           </div>`;
+          } else if (field.type === "date") {
+            // Renderizar input tipo date
+            const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "") : "";
+            return `
+          <div style="flex: 1; min-width: 220px;">
+            <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
+            <input id="swal-input${index}" class="swal2-input" type="date" style="width: 80%;" value="${value}" />
+          </div>`;
           } else {
+            // Renderizar input normal
             const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "") : "";
             return `
           <div style="flex: 1; min-width: 220px;">
@@ -37,6 +46,7 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
         })
         .join("")}</div>`;
   };
+
 
 
   const getFormValues = (fields) => {
@@ -173,57 +183,96 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const updateStock = async () => {
+  const increaseStock = async () => {
     if (selectedIndex !== null) {
       const selectedData = data[selectedIndex];
-
       const isLiquidosTable = tableName === "Líquidos";
+      const columnName = isLiquidosTable ? "volumen" : "stock";
 
-      const { value: formValues } = await Swal.fire({
-        title: `Actualizar ${isLiquidosTable ? 'Volumen' : 'Stock'} en ${tableName}`,
-        html: isLiquidosTable
-            ? `<div style="flex: 1; min-width: 220px;">
-              <label for="swal-input-volumen" style="display: block;">Volumen</label>
-              <input id="swal-input-volumen" class="swal2-input" style="width: 80%;" value="${selectedData.volumen || 0}">
-           </div>`
-            : `<div style="flex: 1; min-width: 220px;">
-              <label for="swal-input-stock" style="display: block;">Stock</label>
-              <input id="swal-input-stock" class="swal2-input" style="width: 80%;" value="${selectedData.stock || 0}">
-           </div>`,
-        focusConfirm: false,
-        preConfirm: () => {
-          return isLiquidosTable
-              ? { volumen: document.getElementById("swal-input-volumen").value }
-              : { stock: document.getElementById("swal-input-stock").value };
+      const { value: incrementValue } = await Swal.fire({
+        title: `Ingresar ${isLiquidosTable ? 'Volumen' : 'Stock'}`,
+        input: 'number',
+        inputLabel: `Ingrese la cantidad para aumentar el ${isLiquidosTable ? 'volumen' : 'stock'}`,
+        inputAttributes: {
+          min: 1,
+          step: 1,
         },
-        didOpen: () => {
-          const inputElements = document.querySelectorAll(".swal2-input");
-          inputElements.forEach((input) => {
-            input.addEventListener("keydown", function (event) {
-              if (event.key === "Enter") {
-                event.preventDefault();
-                document.querySelector(".swal2-confirm").click();
-              }
-            });
-          });
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value || value <= 0) {
+            return 'Por favor, ingrese un valor válido mayor que 0';
+          }
+        },
+        customClass: {
+          input: 'custom-swal-input',
         },
       });
 
-      if (formValues && (isLiquidosTable ? formValues.volumen !== undefined : formValues.stock !== undefined)) {
-        if (isLiquidosTable) {
-          await updateColumn(apiUrl, selectedData.id, "volumen", parseFloat(formValues.volumen));
-        } else {
-          await updateColumn(apiUrl, selectedData.id, "stock", parseFloat(formValues.stock));
-        }
-        await fetchData(apiUrl);
+      if (incrementValue) {
+        const currentValue = selectedData[columnName] || 0;
+        const newValue = currentValue + parseInt(incrementValue, 10);
 
-        await Swal.fire(
-            `${isLiquidosTable ? 'Volumen' : 'Stock'} actualizado`,
-            `El ${isLiquidosTable ? 'volumen' : 'stock'} ha sido actualizado correctamente`,
-            "success"
-        );
-      } else {
-        await Swal.fire("Error", "Por favor, completa el campo correctamente", "error");
+        try {
+          await updateColumn(apiUrl, selectedData.id, columnName, newValue);
+          await fetchData(apiUrl);
+
+          await Swal.fire(
+              `${isLiquidosTable ? 'Volumen' : 'Stock'} aumentado`,
+              `El ${isLiquidosTable ? 'volumen' : 'stock'} ha sido incrementado correctamente en ${incrementValue} unidades`,
+              "success"
+          );
+        } catch (error) {
+          console.error(`Error incrementando el ${isLiquidosTable ? 'volumen' : 'stock'}:`, error);
+          await Swal.fire("Error", `No se pudo incrementar el ${isLiquidosTable ? 'volumen' : 'stock'}`, "error");
+        }
+      }
+    } else {
+      await Swal.fire("Error", "No hay fila seleccionada", "error");
+    }
+  };
+
+  const decreaseStock = async () => {
+    if (selectedIndex !== null) {
+      const selectedData = data[selectedIndex];
+      const isLiquidosTable = tableName === "Líquidos";
+      const columnName = isLiquidosTable ? "volumen" : "stock";
+
+      const { value: decrementValue } = await Swal.fire({
+        title: `Egresar ${isLiquidosTable ? 'Volumen' : 'Stock'}`,
+        input: 'number',
+        inputLabel: `Ingrese la cantidad para reducir el ${isLiquidosTable ? 'volumen' : 'stock'}`,
+        inputAttributes: {
+          min: 1,
+          step: 1,
+        },
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value || value <= 0) {
+            return 'Por favor, ingrese un valor válido mayor que 0';
+          }
+        },
+        customClass: {
+          input: 'custom-swal-input', // Aplica la clase personalizada al input
+        },
+      });
+
+      if (decrementValue) {
+        const currentValue = selectedData[columnName] || 0;
+        const newValue = Math.max(currentValue - parseInt(decrementValue, 10), 0); // Evita valores negativos
+
+        try {
+          await updateColumn(apiUrl, selectedData.id, columnName, newValue);
+          await fetchData(apiUrl);
+
+          await Swal.fire(
+              `${isLiquidosTable ? 'Volumen' : 'Stock'} reducido`,
+              `El ${isLiquidosTable ? 'volumen' : 'stock'} ha sido reducido correctamente en ${decrementValue} unidades`,
+              "success"
+          );
+        } catch (error) {
+          console.error(`Error reduciendo el ${isLiquidosTable ? 'volumen' : 'stock'}:`, error);
+          await Swal.fire("Error", `No se pudo reducir el ${isLiquidosTable ? 'volumen' : 'stock'}`, "error");
+        }
       }
     } else {
       await Swal.fire("Error", "No hay fila seleccionada", "error");
@@ -238,6 +287,7 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
     handleEditRow,
     handleDeleteRow,
     handleRowClick,
-    updateStock,
+    increaseStock,
+    decreaseStock,
   };
 }

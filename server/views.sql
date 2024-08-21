@@ -74,7 +74,7 @@ JOIN
 JOIN
     api_envase en ON pe.envase_id = en.id
 LEFT JOIN
-    api_liquido l ON en.id_liquido_id = l.id
+    api_liquido l ON p.id_liquido_id = l.id
 
 UNION ALL
 
