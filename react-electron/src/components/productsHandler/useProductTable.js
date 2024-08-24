@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { GenericContext } from "../contexts/GenericContext";
 import '../styles/styleSelect.css';
 
-export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrlTable }) {
+export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrlView }) {
   const { deleteItem, fetchData, addItem, editItem, updateColumn, data, isLoading } = useContext(GenericContext);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
@@ -40,7 +40,6 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
   };
 
 
-  // Efecto para cargar las opciones de multi-select y líquidos filtrados cuando se abra el formulario
   const loadAllOptions = async () => {
     const fieldsWithOptions = fieldsTable.filter((field) => field.type === "multi-select" || field.name === "id_liquido");
 
@@ -77,38 +76,46 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
         .map((field, index) => {
           if (field.type === "multi-select" || field.name === "id_liquido") {
             return `
-            <div style="flex: 1; min-width: 220px;">
-              <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
-              <select id="swal-input${index}" class="swal2-input" style="width: 100%;">
-                ${options[field.name]?.map(option => `
-                  <option value="${option.value}" ${selectedData && selectedData[field.name]?.includes(option.value) ? 'selected' : ''}>
+          <div style="flex: 1; min-width: 220px;">
+            <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
+            <select id="swal-input${index}" class="swal2-input" style="width: 100%;" multiple>
+              ${options[field.name]?.map(option => {
+              const selectedValues = selectedData && Array.isArray(selectedData[field.name]) ? selectedData[field.name] : [];
+              return `
+                  <option value="${option.value}" ${selectedValues.includes(option.value) ? 'selected' : ''}>
                     ${option.label}
                   </option>
-                `).join('')}
-              </select>
-            </div>`;
+                `;
+            }).join('')}
+            </select>
+          </div>`;
           } else {
             const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "") : "";
             return `
-            <div style="flex: 1; min-width: 220px;">
-              <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
-              <input id="swal-input${index}" class="swal2-input" style="width: 100%;" value="${value}" />
-            </div>`;
+          <div style="flex: 1; min-width: 220px;">
+            <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
+            <input id="swal-input${index}" class="swal2-input" style="width: 100%;" value="${value}" />
+          </div>`;
           }
         }).join("")}</div>`;
   };
 
+
+
   const getFormValues = (fields) => {
     return fields.reduce((acc, field, index) => {
       const element = document.getElementById(`swal-input${index}`);
-      if (field.type === "multi-select" || field.name === "id_liquido") {
+      if (field.type === "multi-select") {
         acc[field.name] = Array.from(element.selectedOptions).map(option => option.value);
+      } else if (field.name === "id_liquido") {
+        acc[field.name] = parseInt(element.value, 10);
       } else {
         acc[field.name] = element.value;
       }
       return acc;
     }, {});
   };
+
 
   const handleAddRow = async () => {
     await loadAllOptions(); // Cargamos las opciones antes de abrir el formulario
@@ -133,9 +140,11 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
 
     if (formValues && fieldsTable.every((field) => formValues[field.name])) {
       try {
-        await addItem(apiUrlTable, formValues);
+        await addItem(apiUrl, formValues);
+        await fetchData(apiUrlView);
         await fetchData(apiUrl);
-        await fetchData(apiUrlTable);
+
+        console.log("Datos resultantes:", data);
 
         await Swal.fire(
             `${tableName} agregado`,
@@ -176,9 +185,10 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
       });
 
       if (formValues && fieldsTable.every((field) => formValues[field.name])) {
-        editItem(apiUrlTable, selectedData.id, formValues); // Usamos apiUrlTable para actualizar
+        editItem(apiUrl, selectedData.id, formValues);
+        await fetchData(apiUrlView);
         await fetchData(apiUrl);
-        await fetchData(apiUrlTable);
+
 
         await Swal.fire(
             `${tableName} actualizado`,
@@ -207,9 +217,9 @@ const handleDeleteRow = async () => {
         cancelButtonText: "Cancelar",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await deleteItem(apiUrlTable, selectedData.id);
+          await deleteItem(apiUrl, selectedData.id);
+          await fetchData(apiUrlView);
           await fetchData(apiUrl);
-          await fetchData(apiUrlTable);
           setSelectedIndex(null);
           await Swal.fire("Eliminado", "La fila ha sido eliminada.", "success");
         }
@@ -258,6 +268,7 @@ const handleDeleteRow = async () => {
 
         try {
           await updateColumn(apiUrl, selectedData.id, columnName, newValue);
+          await fetchData(apiUrlView);
           await fetchData(apiUrl);
 
           await Swal.fire(
@@ -306,6 +317,7 @@ const handleDeleteRow = async () => {
 
         try {
           await updateColumn(apiUrl, selectedData.id, columnName, newValue);
+          await fetchData(apiUrlView);
           await fetchData(apiUrl);
 
           await Swal.fire(

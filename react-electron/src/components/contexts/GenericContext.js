@@ -42,6 +42,7 @@ export const GenericProvider = ({ children }) => {
 
             const newItem = await response.json();
             setData((prevData) => [...prevData, newItem]);
+            console.log("Datos enviados:", newItem);
         } catch (error) {
             console.error('Error al agregar el elemento:', error);
         }

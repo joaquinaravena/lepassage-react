@@ -13,7 +13,8 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
         useProductTable({
             tableName: isProductTableVisible ? viewTableName : 'productos', // Alterna entre la tabla productos y la vista
             apiUrl: isProductTableVisible ? viewApiUrl : productApiUrl,
-            fieldsTable: isProductTableVisible ? viewFields : productFields
+            fieldsTable: isProductTableVisible ? viewFields : productFields,
+            apiUrlView: viewApiUrl,
         });
 
     const [totalCosto, setTotalCosto] = useState(0);
