@@ -180,7 +180,7 @@ export const productosConfig = {
     { name: "sku", placeholder: "SKU" },
     {
       name: "id_liquido",
-      placeholder: "Fragancias",
+      placeholder: "Fragancia",
       type: "select",
       optionsUrl: "/api/liquidos/",
       filterType: "Fragancia"

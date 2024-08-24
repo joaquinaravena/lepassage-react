@@ -151,12 +151,18 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                     >
                         {fieldsToShow.map((field) => (
                             <td key={field.name} className="px-4 py-2 border-b border-gray-200">
-                                {fila[field.name] !== undefined ? fila[field.name] : "indefinido"}
+                                {Array.isArray(fila[field.name]) ? (
+                                    // Si es un array, unimos los valores que queremos mostrar
+                                    fila[field.name].map((item) => item.nombre).join(", ")
+                                ) : (
+                                    fila[field.name] !== undefined ? fila[field.name] : "indefinido"
+                                )}
                             </td>
                         ))}
                     </tr>
                 ))}
                 </tbody>
+
             </table>
         </TableContainer>
     );

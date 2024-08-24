@@ -4,7 +4,7 @@ import { GenericContext } from "../contexts/GenericContext";
 import '../styles/styleSelect.css';
 
 export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrlView }) {
-  const { deleteItem, fetchData, addItem, editItem, updateColumn, data, isLoading } = useContext(GenericContext);
+  const { deleteItem, fetchData, addItem, editItem, updateProduct, data, isLoading } = useContext(GenericContext);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   // Estado para las opciones de misceláneas, envases, paquetes y líquidos filtrados
@@ -74,13 +74,30 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
   const createInputsHtml = (fields, selectedData) => {
     return `<div style="display: flex; flex-wrap: wrap; gap: 15px;">${fields
         .map((field, index) => {
-          if (field.type === "multi-select" || field.name === "id_liquido") {
+          if (field.name === "id_liquido") {
+            // Campo select simple
+            return `
+          <div style="flex: 1; min-width: 220px;">
+            <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
+            <select id="swal-input${index}" class="swal2-input" style="width: 100%;">
+              ${options[field.name]?.map(option => {
+              const selectedValue = selectedData ? selectedData[field.name] : null;
+              return `
+                  <option value="${option.value}" ${selectedValue === option.value ? 'selected' : ''}>
+                    ${option.label}
+                  </option>
+                `;
+            }).join('')}
+            </select>
+          </div>`;
+          } else if (field.type === "multi-select") {
+            // Campo multi-select
             return `
           <div style="flex: 1; min-width: 220px;">
             <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
             <select id="swal-input${index}" class="swal2-input" style="width: 100%;" multiple>
               ${options[field.name]?.map(option => {
-              const selectedValues = selectedData && Array.isArray(selectedData[field.name]) ? selectedData[field.name] : [];
+              const selectedValues = selectedData && Array.isArray(selectedData[field.name]) ? selectedData[field.name].map(item => item.id) : [];
               return `
                   <option value="${option.value}" ${selectedValues.includes(option.value) ? 'selected' : ''}>
                     ${option.label}
@@ -90,6 +107,7 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
             </select>
           </div>`;
           } else {
+            // Campo de texto
             const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "") : "";
             return `
           <div style="flex: 1; min-width: 220px;">
@@ -99,8 +117,6 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
           }
         }).join("")}</div>`;
   };
-
-
 
   const getFormValues = (fields) => {
     return fields.reduce((acc, field, index) => {
@@ -115,6 +131,7 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
       return acc;
     }, {});
   };
+
 
 
   const handleAddRow = async () => {
@@ -140,7 +157,19 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
 
     if (formValues && fieldsTable.every((field) => formValues[field.name])) {
       try {
-        await addItem(apiUrl, formValues);
+        // Transformamos los campos antes de enviarlos al backend
+        const transformedValues = {
+          ...formValues,
+          miscelaneas_ids: formValues.miscelaneas,
+          envases_ids: formValues.envases,
+          paquetes_ids: formValues.paquetes,
+        };
+
+        delete transformedValues.miscelaneas;
+        delete transformedValues.envases;
+        delete transformedValues.paquetes;
+
+        await addItem(apiUrl, transformedValues);
         await fetchData(apiUrlView);
         await fetchData(apiUrl);
 
@@ -160,6 +189,7 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
     }
   };
 
+
   const handleEditRow = async () => {
     if (selectedIndex !== null) {
       const selectedData = data[selectedIndex];
@@ -168,7 +198,7 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
 
       const { value: formValues } = await Swal.fire({
         title: `Editar ${tableName}`,
-        html: createInputsHtml(fieldsTable, selectedData), // Usamos fieldsTable para incluir los multi-selects y el select filtrado
+        html: createInputsHtml(fieldsTable, selectedData),
         focusConfirm: false,
         preConfirm: () => getFormValues(fieldsTable),
         didOpen: () => {
@@ -185,16 +215,32 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
       });
 
       if (formValues && fieldsTable.every((field) => formValues[field.name])) {
-        editItem(apiUrl, selectedData.id, formValues);
-        await fetchData(apiUrlView);
-        await fetchData(apiUrl);
+        try {
+          // Transformamos los campos antes de enviarlos al backend
+          const transformedValues = {
+            ...formValues,
+            miscelaneas_ids: formValues.miscelaneas, // Renombramos los campos
+            envases_ids: formValues.envases,
+            paquetes_ids: formValues.paquetes,
+          };
 
+          delete transformedValues.miscelaneas; // Eliminamos los campos originales para evitar conflictos
+          delete transformedValues.envases;
+          delete transformedValues.paquetes;
 
-        await Swal.fire(
-            `${tableName} actualizado`,
-            `${tableName} ha sido actualizado correctamente`,
-            "success"
-        );
+          await editItem(apiUrl, selectedData.id, transformedValues);
+          await fetchData(apiUrlView);
+          await fetchData(apiUrl);
+
+          await Swal.fire(
+              `${tableName} actualizado`,
+              `${tableName} ha sido actualizado correctamente`,
+              "success"
+          );
+        } catch (error) {
+          console.error("Error updating row:", error);
+          await Swal.fire("Error", "No se pudo actualizar la fila", "error");
+        }
       } else {
         await Swal.fire("Error", "Por favor, completa todos los campos", "error");
       }
@@ -203,7 +249,7 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
     }
   };
 
-const handleDeleteRow = async () => {
+  const handleDeleteRow = async () => {
     if (selectedIndex !== null) {
       const selectedData = data[selectedIndex];
       Swal.fire({
@@ -240,7 +286,6 @@ const handleDeleteRow = async () => {
   const increaseStock = async () => {
     if (selectedIndex !== null) {
       const selectedData = data[selectedIndex];
-      const columnName = "stock";
 
       const { value: incrementValue } = await Swal.fire({
         title: `Ingresar Stock`,
@@ -258,16 +303,24 @@ const handleDeleteRow = async () => {
           }
         },
         customClass: {
-          input: 'custom-swal-input', // Aplica la clase personalizada al input
+          input: 'custom-swal-input',
         },
       });
 
       if (incrementValue) {
-        const currentValue = selectedData[columnName] || 0;
-        const newValue = currentValue + parseInt(incrementValue, 10);
+        const newValue = (selectedData.stock || 0) + parseInt(incrementValue, 10);
+
+        // Crear el objeto actualizado con todos los valores
+        const updatedProduct = {
+          ...selectedData,
+          stock: newValue,
+          miscelaneas_ids: selectedData.miscelaneas.map(m => m.id), // Renombramos y formateamos los campos
+          envases_ids: selectedData.envases.map(e => e.id),
+          paquetes_ids: selectedData.paquetes.map(p => p.id),
+        };
 
         try {
-          await updateColumn(apiUrl, selectedData.id, columnName, newValue);
+          await updateProduct(apiUrl, selectedData.id, updatedProduct);
           await fetchData(apiUrlView);
           await fetchData(apiUrl);
 
@@ -289,13 +342,11 @@ const handleDeleteRow = async () => {
   const decreaseStock = async () => {
     if (selectedIndex !== null) {
       const selectedData = data[selectedIndex];
-      const columnName = "stock";
 
       const { value: decrementValue } = await Swal.fire({
         title: `Egresar Stock`,
         input: 'number',
         inputLabel: `Ingrese la cantidad para reducir el stock`,
-        inputPlaceholder: 0,
         inputAttributes: {
           min: 1,
           step: 1,
@@ -307,16 +358,24 @@ const handleDeleteRow = async () => {
           }
         },
         customClass: {
-          input: 'custom-swal-input', // Aplica la clase personalizada al input
+          input: 'custom-swal-input',
         },
       });
 
       if (decrementValue) {
-        const currentValue = selectedData[columnName] || 0;
-        const newValue = Math.max(currentValue - parseInt(decrementValue, 10), 0); // Evita valores negativos
+        const newValue = Math.max((selectedData.stock || 0) - parseInt(decrementValue, 10), 0);
+
+        // Crear el objeto actualizado con todos los valores
+        const updatedProduct = {
+          ...selectedData,
+          stock: newValue,
+          miscelaneas_ids: selectedData.miscelaneas.map(m => m.id), // Renombramos y formateamos los campos
+          envases_ids: selectedData.envases.map(e => e.id),
+          paquetes_ids: selectedData.paquetes.map(p => p.id),
+        };
 
         try {
-          await updateColumn(apiUrl, selectedData.id, columnName, newValue);
+          await updateProduct(apiUrl, selectedData.id, updatedProduct);
           await fetchData(apiUrlView);
           await fetchData(apiUrl);
 
@@ -334,6 +393,7 @@ const handleDeleteRow = async () => {
       await Swal.fire("Error", "No hay fila seleccionada", "error");
     }
   };
+
 
   return {
     data,

@@ -37,56 +37,58 @@ class EnvaseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductoSerializer(serializers.ModelSerializer):
-    miscelaneas = serializers.ListField(child=serializers.IntegerField(), write_only=True)
-    envases = serializers.ListField(child=serializers.IntegerField(), write_only=True)
-    paquetes = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    miscelaneas = serializers.SerializerMethodField()
+    envases = serializers.SerializerMethodField()
+    paquetes = serializers.SerializerMethodField()
+
+    # Campo de solo escritura para manejar la entrada como arrays de IDs
+    miscelaneas_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    envases_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    paquetes_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
     class Meta:
         model = Producto
         fields = '__all__'
 
+    def get_miscelaneas(self, obj):
+        return MiscelaneaSerializer(obj.miscelaneas.all(), many=True).data
+
+    def get_envases(self, obj):
+        return EnvaseSerializer(obj.envases.all(), many=True).data
+
+    def get_paquetes(self, obj):
+        return PaqueteSerializer(obj.paquetes.all(), many=True).data
+
     def create(self, validated_data):
-        miscelaneas_data = validated_data.pop('miscelaneas', [])
-        envases_data = validated_data.pop('envases', [])
-        paquetes_data = validated_data.pop('paquetes', [])
+        # Extraemos los datos de los arrays de IDs
+        miscelaneas_data = validated_data.pop('miscelaneas_ids', [])
+        envases_data = validated_data.pop('envases_ids', [])
+        paquetes_data = validated_data.pop('paquetes_ids', [])
 
         # Creamos el producto
         producto = Producto.objects.create(**validated_data)
 
         # Creamos las relaciones en las tablas intermedias
-        for miscelanea_id in miscelaneas_data:
-            ProductoMiscelanea.objects.create(producto=producto, miscelanea_id=miscelanea_id)
-
-        for envase_id in envases_data:
-            ProductoEnvase.objects.create(producto=producto, envase_id=envase_id)
-
-        for paquete_id in paquetes_data:
-            ProductoPaquete.objects.create(producto=producto, paquete_id=paquete_id)
+        producto.miscelaneas.set(miscelaneas_data)
+        producto.envases.set(envases_data)
+        producto.paquetes.set(paquetes_data)
 
         return producto
 
     def update(self, instance, validated_data):
-        miscelaneas_data = validated_data.pop('miscelaneas', [])
-        envases_data = validated_data.pop('envases', [])
-        paquetes_data = validated_data.pop('paquetes', [])
+        miscelaneas_data = validated_data.pop('miscelaneas_ids', [])
+        envases_data = validated_data.pop('envases_ids', [])
+        paquetes_data = validated_data.pop('paquetes_ids', [])
 
         # Actualizamos los campos del producto
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
-        # Limpiamos las relaciones actuales y creamos nuevas
-        ProductoMiscelanea.objects.filter(producto=instance).delete()
-        ProductoEnvase.objects.filter(producto=instance).delete()
-        ProductoPaquete.objects.filter(producto=instance).delete()
-
-        for miscelanea_id in miscelaneas_data:
-            ProductoMiscelanea.objects.create(producto=instance, miscelanea_id=miscelanea_id)
-
-        for envase_id in envases_data:
-            ProductoEnvase.objects.create(producto=instance, envase_id=envase_id)
-
-        for paquete_id in paquetes_data:
-            ProductoPaquete.objects.create(producto=instance, paquete_id=paquete_id)
+        # Actualizamos las relaciones many-to-many
+        instance.miscelaneas.set(miscelaneas_data)
+        instance.envases.set(envases_data)
+        instance.paquetes.set(paquetes_data)
 
         return instance
+
