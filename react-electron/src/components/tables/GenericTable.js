@@ -9,7 +9,6 @@ export default function GenericTable({ config, searchQuery }) {
 
     const [totalCosto, setTotalCosto] = useState(0);
     const [loading, setLoading] = useState(true);
-
     const [filteredData, setFilteredData] = useState([]);
     const [selectedFilteredIndex, setSelectedFilteredIndex] = useState(null);
 
@@ -54,10 +53,16 @@ export default function GenericTable({ config, searchQuery }) {
         }
     }, [searchQuery, data, fields]);
 
+
     const handleFilteredRowClick = (index) => {
-        const actualIndex = data.indexOf(filteredData[index]);
-        setSelectedFilteredIndex(actualIndex);
-        handleRowClick(actualIndex);  // Usar el índice real en `data`
+        if(selectedFilteredIndex === index || index === null) {
+            setSelectedFilteredIndex(null);
+            handleRowClick(null);
+        }else {
+            const actualIndex = data.indexOf(filteredData[index]);
+            setSelectedFilteredIndex(actualIndex);
+            handleRowClick(actualIndex);
+        }
     };
 
     if (isLoading || loading)
@@ -92,7 +97,7 @@ export default function GenericTable({ config, searchQuery }) {
                         Agregar
                     </button>
                     <button
-                        onClick={() => handleEditRow(selectedFilteredIndex)}
+                        onClick={() => handleEditRow()}
                         className={`mb-4 p-2 border rounded-lg ${
                             tableName === "Insumos"
                                 ? "border-gray-400 text-gray-400 cursor-not-allowed"
@@ -103,7 +108,7 @@ export default function GenericTable({ config, searchQuery }) {
                         Editar
                     </button>
                     <button
-                        onClick={() => handleDeleteRow(selectedFilteredIndex)}
+                        onClick={() => handleDeleteRow()}
                         className={`mb-4 p-2 border rounded-lg ${
                             tableName === "Insumos"
                                 ? "border-gray-400 text-gray-400 cursor-not-allowed"
@@ -114,7 +119,7 @@ export default function GenericTable({ config, searchQuery }) {
                         Eliminar
                     </button>
                     <button
-                        onClick={() => increaseStock(selectedFilteredIndex)}
+                        onClick={() => increaseStock()}
                         className={`mb-4 p-2 border rounded-lg ${
                             tableName === "Insumos"
                                 ? "border-gray-400 text-gray-400 cursor-not-allowed"
@@ -125,7 +130,7 @@ export default function GenericTable({ config, searchQuery }) {
                         Ingresar Stock
                     </button>
                     <button
-                        onClick={() => decreaseStock(selectedFilteredIndex)}
+                        onClick={() => decreaseStock()}
                         className={`mb-4 p-2 border rounded-lg ${
                             tableName === "Insumos"
                                 ? "border-gray-400 text-gray-400 cursor-not-allowed"

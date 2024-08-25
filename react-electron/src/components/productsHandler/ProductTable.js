@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { HashLoader } from "react-spinners";
 import useProductTable from "./useProductTable";
 import TableContainer from "../tables/TableContainer";
-import {costoTotal} from "../costoTotal";
+import { costoTotal } from "../costoTotal";
 
 export default function ProductTable({ viewConfig, productConfig, searchQuery }) {
-    const { fields: viewFields, tableName: viewTableName, apiUrl: viewApiUrl } = viewConfig; // Fields de la vista
-    const { fieldsTable: productFields, apiUrlTable: productApiUrl } = productConfig; // Fields de la tabla real
+    const { fields: viewFields, tableName: viewTableName, apiUrl: viewApiUrl } = viewConfig;
+    const { fieldsTable: productFields, apiUrlTable: productApiUrl } = productConfig;
 
-    const [isProductTableVisible, setIsProductTableVisible] = useState(false); // Estado para alternar entre vista y tabla
+    const [isProductTableVisible, setIsProductTableVisible] = useState(false);
     const { data, selectedIndex, isLoading, handleAddRow, handleDeleteRow, handleEditRow, handleRowClick, increaseStock, decreaseStock } =
         useProductTable({
-            tableName: isProductTableVisible ? viewTableName : 'productos', // Alterna entre la tabla productos y la vista
+            tableName: isProductTableVisible ? viewTableName : 'productos',
             apiUrl: isProductTableVisible ? viewApiUrl : productApiUrl,
             fieldsTable: isProductTableVisible ? viewFields : productFields,
             apiUrlView: viewApiUrl,
@@ -19,6 +19,9 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
 
     const [totalCosto, setTotalCosto] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [filteredData, setFilteredData] = useState([]);
+    const [selectedFilteredIndex, setSelectedFilteredIndex] = useState(null);
+    const tableRef = useRef(null); // Referencia para la tabla
 
     useEffect(() => {
         const fetchCostoTotal = async () => {
@@ -35,14 +38,12 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
         fetchCostoTotal();
     }, []);
 
-    const [filteredData, setFilteredData] = useState(data);
-
     useEffect(() => {
         if (searchQuery) {
             const lowerCaseQuery = searchQuery.toLowerCase();
             setFilteredData(
                 data.filter((fila) =>
-                    (isProductTableVisible ? viewFields : productFields).some((field) =>
+                    productFields.some((field) =>
                         fila[field.name]?.toString().toLowerCase().includes(lowerCaseQuery)
                     )
                 )
@@ -50,7 +51,19 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
         } else {
             setFilteredData(data);
         }
-    }, [searchQuery, data, viewFields, productFields, isProductTableVisible]);
+    }, [searchQuery, data, productFields]);
+
+    const handleFilteredRowClick = (index) => {
+        if(selectedFilteredIndex === index || index === null) {
+            setSelectedFilteredIndex(null);
+            handleRowClick(null);
+        }else {
+            const actualIndex = data.indexOf(filteredData[index]);
+            setSelectedFilteredIndex(actualIndex);
+            handleRowClick(actualIndex);
+        }
+    };
+
 
     if (isLoading || loading)
         return (
@@ -65,7 +78,6 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
         return acc + (precio * cantidad);
     }, 0).toFixed(2);
 
-
     const toggleProductTable = () => {
         setIsProductTableVisible(!isProductTableVisible);
     };
@@ -73,7 +85,7 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
     const fieldsToShow = isProductTableVisible ? viewFields : productFields;
 
     return (
-        <TableContainer className="overflow-auto h-full flex flex-col bg-options-panel">
+        <TableContainer ref={tableRef} className="overflow-auto h-full flex flex-col bg-options-panel">
             <div className="flex justify-between mb-4">
                 <div className="flex space-x-4">
                     <button
@@ -129,7 +141,6 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                             en {isProductTableVisible ? viewTableName : 'Productos'}: ${costoTotalTablaActual}</p>
                     </div>
                 </div>
-
             </div>
 
             <table className="min-w-full">
@@ -146,13 +157,14 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                 {filteredData.map((fila, index) => (
                     <tr
                         key={index}
-                        className={`cursor-pointer ${selectedIndex === index ? "bg-blue-50" : ""}`}
-                        onClick={() => handleRowClick(index)}
+                        className={`cursor-pointer ${
+                            data.indexOf(fila) === selectedFilteredIndex ? "bg-blue-50" : ""
+                        }`}
+                        onClick={() => handleFilteredRowClick(index)}
                     >
                         {fieldsToShow.map((field) => (
                             <td key={field.name} className="px-4 py-2 border-b border-gray-200">
                                 {Array.isArray(fila[field.name]) ? (
-                                    // Si es un array, unimos los valores que queremos mostrar
                                     fila[field.name].map((item) => item.nombre).join(", ")
                                 ) : (
                                     fila[field.name] !== undefined ? fila[field.name] : "indefinido"
@@ -162,7 +174,6 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                     </tr>
                 ))}
                 </tbody>
-
             </table>
         </TableContainer>
     );

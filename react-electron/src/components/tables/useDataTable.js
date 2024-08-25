@@ -172,17 +172,6 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      const tableContainer = document.querySelector(".table-container");
-      if (tableContainer && !tableContainer.contains(event.target)) {
-        setSelectedIndex(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const increaseStock = async () => {
     if (selectedIndex !== null) {
