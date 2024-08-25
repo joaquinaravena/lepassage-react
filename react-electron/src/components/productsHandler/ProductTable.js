@@ -80,7 +80,7 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                         onClick={toggleProductTable}
                         className="mb-4 p-2 border rounded-lg border-text-border hover:bg-text-border hover:text-white"
                     >
-                        {isProductTableVisible ? "Mostrar Productos" : "Mostrar Vista"}
+                        {isProductTableVisible ? "Productos" : "Catálogo"}
                     </button>
 
                     <button
@@ -122,11 +122,11 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                 <div
                     className="flex flex-col items-end mb-4 space-y-2 border border-gray-300 p-4 rounded-lg shadow-sm bg-white">
                     <div className="text-right">
-                        <p className="text-sm font-medium">Costo total: ${totalCosto}</p>
+                        <p className="text-sm font-medium">Valorizacion de Stock Total: ${totalCosto}</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-sm font-medium">Costo
-                            total {isProductTableVisible ? viewTableName : 'productos'}: ${costoTotalTablaActual}</p>
+                        <p className="text-sm font-medium">Valorizacion de Stock
+                            en {isProductTableVisible ? viewTableName : 'Productos'}: ${costoTotalTablaActual}</p>
                     </div>
                 </div>
 

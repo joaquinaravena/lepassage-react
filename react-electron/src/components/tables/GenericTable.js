@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import TableContainer from "./TableContainer";
 import useDataTable from "./useDataTable";
 import { HashLoader } from "react-spinners";
-import {costoTotal} from "../costoTotal";
+import { costoTotal } from "../costoTotal";
 
 export default function GenericTable({ config, searchQuery }) {
     const { fields, tableName, apiUrl } = config;
 
     const [totalCosto, setTotalCosto] = useState(0);
     const [loading, setLoading] = useState(true);
+
+    const [filteredData, setFilteredData] = useState([]);
+    const [selectedFilteredIndex, setSelectedFilteredIndex] = useState(null);
 
     useEffect(() => {
         const fetchCostoTotal = async () => {
@@ -27,7 +30,6 @@ export default function GenericTable({ config, searchQuery }) {
 
     const {
         data,
-        selectedIndex,
         isLoading,
         handleAddRow,
         handleDeleteRow,
@@ -36,8 +38,6 @@ export default function GenericTable({ config, searchQuery }) {
         increaseStock,
         decreaseStock
     } = useDataTable({ fields, tableName, apiUrl });
-
-    const [filteredData, setFilteredData] = useState(data);
 
     useEffect(() => {
         if (searchQuery) {
@@ -54,6 +54,12 @@ export default function GenericTable({ config, searchQuery }) {
         }
     }, [searchQuery, data, fields]);
 
+    const handleFilteredRowClick = (index) => {
+        const actualIndex = data.indexOf(filteredData[index]);
+        setSelectedFilteredIndex(actualIndex);
+        handleRowClick(actualIndex);  // Usar el índice real en `data`
+    };
+
     if (isLoading || loading)
         return (
             <div className="flex justify-center items-center h-full">
@@ -69,11 +75,10 @@ export default function GenericTable({ config, searchQuery }) {
         return acc + (precio * cantidad);
     }, 0).toFixed(2);
 
-
-
     return (
         <TableContainer className="overflow-auto h-full flex flex-col bg-options-panel">
             <div className="flex justify-between mb-4">
+                {/* Botones de acción */}
                 <div className="flex space-x-4">
                     <button
                         onClick={() => handleAddRow()}
@@ -87,7 +92,7 @@ export default function GenericTable({ config, searchQuery }) {
                         Agregar
                     </button>
                     <button
-                        onClick={() => handleEditRow()}
+                        onClick={() => handleEditRow(selectedFilteredIndex)}
                         className={`mb-4 p-2 border rounded-lg ${
                             tableName === "Insumos"
                                 ? "border-gray-400 text-gray-400 cursor-not-allowed"
@@ -98,7 +103,7 @@ export default function GenericTable({ config, searchQuery }) {
                         Editar
                     </button>
                     <button
-                        onClick={() => handleDeleteRow()}
+                        onClick={() => handleDeleteRow(selectedFilteredIndex)}
                         className={`mb-4 p-2 border rounded-lg ${
                             tableName === "Insumos"
                                 ? "border-gray-400 text-gray-400 cursor-not-allowed"
@@ -109,7 +114,7 @@ export default function GenericTable({ config, searchQuery }) {
                         Eliminar
                     </button>
                     <button
-                        onClick={() => increaseStock()}
+                        onClick={() => increaseStock(selectedFilteredIndex)}
                         className={`mb-4 p-2 border rounded-lg ${
                             tableName === "Insumos"
                                 ? "border-gray-400 text-gray-400 cursor-not-allowed"
@@ -120,7 +125,7 @@ export default function GenericTable({ config, searchQuery }) {
                         Ingresar Stock
                     </button>
                     <button
-                        onClick={() => decreaseStock()}
+                        onClick={() => decreaseStock(selectedFilteredIndex)}
                         className={`mb-4 p-2 border rounded-lg ${
                             tableName === "Insumos"
                                 ? "border-gray-400 text-gray-400 cursor-not-allowed"
@@ -131,25 +136,27 @@ export default function GenericTable({ config, searchQuery }) {
                         Egresar Stock
                     </button>
                 </div>
+
+                {/* Mostrar costos totales */}
                 <div
                     className="flex flex-col items-end mb-4 space-y-2 border border-gray-300 p-4 rounded-lg shadow-sm bg-white">
                     <div className="text-right">
-                        <p className="text-sm font-medium">Costo total: ${totalCosto}</p>
+                        <p className="text-sm font-medium">Valorizacion de Stock Total: ${totalCosto}</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-sm font-medium">Costo
-                            total {tableName}: ${costoTotalTablaActual}</p>
+                        <p className="text-sm font-medium">Valorizacion de Stock en {tableName}: ${costoTotalTablaActual}</p>
                     </div>
                 </div>
-
             </div>
-            <table className="min-w-full">
+
+            {/* Tabla de datos */}
+            <table className="min-w-full table-auto">
                 <thead>
                 <tr>
                     {fields.map((field) => (
                         <th
                             key={field.name}
-                            className="px-4 py-2 text-left border-b border-gray-200"
+                            className="px-4 py-2 text-center border-b border-gray-200"
                         >
                             {field.placeholder}
                         </th>
@@ -161,14 +168,14 @@ export default function GenericTable({ config, searchQuery }) {
                     <tr
                         key={index}
                         className={`cursor-pointer ${
-                            selectedIndex === index ? "bg-blue-50" : ""
+                            data.indexOf(fila) === selectedFilteredIndex ? "bg-blue-50" : ""
                         }`}
-                        onClick={() => handleRowClick(index)}
+                        onClick={() => handleFilteredRowClick(index)}
                     >
                         {fields.map((field) => (
                             <td
                                 key={field.name}
-                                className="px-4 py-2 border-b border-gray-200"
+                                className="px-4 py-2 border-b border-gray-200 text-center"
                             >
                                 {fila[field.name] !== undefined
                                     ? fila[field.name]

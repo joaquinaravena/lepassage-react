@@ -41,7 +41,7 @@ class InsumoView(models.Model):
     nombre = models.CharField(max_length=45, null=True)
     sku = models.CharField(max_length=45, primary_key=True)
     volumen = models.PositiveIntegerField(null=True)
-    precio = models.DecimalField(max_digits=5, decimal_places=2)
+    precio = models.DecimalField(max_digits=9, decimal_places=2)
     stock = models.PositiveIntegerField(null=True)
 
     class Meta:
@@ -53,7 +53,7 @@ class Liquido(models.Model):
     sku = models.CharField(max_length=45)
     tipo = models.CharField(max_length=45, choices=TIPO_LIQUIDO_CHOICES)
     volumen = models.PositiveIntegerField()
-    precio = models.DecimalField(max_digits=5, decimal_places=2)
+    precio = models.DecimalField(max_digits=9, decimal_places=2)
     vencimiento = models.DateField(null=True, blank=True)
 
     def __str__(self):
@@ -65,7 +65,7 @@ class Etiqueta(models.Model):
     nombre = models.CharField(max_length=45)
     sku = models.CharField(max_length=45)
     stock = models.PositiveIntegerField()
-    precio = models.DecimalField(max_digits=5, decimal_places=2)
+    precio = models.DecimalField(max_digits=9, decimal_places=2)
     volumen = models.PositiveIntegerField()
 
     def __str__(self):
@@ -76,7 +76,7 @@ class Miscelanea(models.Model):
     nombre = models.CharField(max_length=45)
     tipo = models.CharField(max_length=45, choices=TIPO_OBJETO_CHOICES)
     stock = models.PositiveIntegerField()
-    precio = models.DecimalField(max_digits=5, decimal_places=2)
+    precio = models.DecimalField(max_digits=9, decimal_places=2)
     vendible = models.BooleanField(null=True, default=True)
 
     def __str__(self):
@@ -88,7 +88,7 @@ class Paquete(models.Model):
     sku = models.CharField(max_length=45)
     tipo = models.CharField(max_length=45, choices=TIPO_PAQUETE_CHOICES)
     stock = models.PositiveIntegerField()
-    precio = models.DecimalField(max_digits=5, decimal_places=2)
+    precio = models.DecimalField(max_digits=9, decimal_places=2)
 
     def __str__(self):
         return self.nombre
@@ -100,7 +100,7 @@ class Envase(models.Model):
     tipo = models.CharField(max_length=45, choices=TIPO_ENVASE_CHOICES)
     volumen = models.PositiveIntegerField()
     stock = models.PositiveIntegerField()
-    precio = models.DecimalField(max_digits=5, decimal_places=2)
+    precio = models.DecimalField(max_digits=9, decimal_places=2)
 
     def __str__(self):
         return self.sku
@@ -111,7 +111,7 @@ class Producto(models.Model):
     sku = models.CharField(max_length=45)
     id_liquido = models.ForeignKey(Liquido, on_delete=models.SET_NULL, null=True, blank=True)
     stock = models.PositiveIntegerField()
-    precio = models.DecimalField(max_digits=5, decimal_places=2)
+    precio = models.DecimalField(max_digits=9, decimal_places=2)
     miscelaneas = models.ManyToManyField(Miscelanea, through='ProductoMiscelanea')
     envases = models.ManyToManyField(Envase, through='ProductoEnvase')
     paquetes = models.ManyToManyField(Paquete, through='ProductoPaquete')
@@ -125,7 +125,7 @@ class ProductosView(models.Model):
     fragancia = models.CharField(max_length=45, null=True)
     volumen = models.IntegerField(null=True)
     stock = models.IntegerField()
-    precio= models.DecimalField(max_digits=5, decimal_places=2)
+    precio = models.DecimalField(max_digits=9, decimal_places=2)
 
     class Meta:
         managed = False

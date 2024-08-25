@@ -8,6 +8,7 @@ export default styled.div`
     table {
         border-spacing: 0;
         border: 1px solid black;
+        table-layout: auto; /* Para que las columnas sean flexibles */
 
         tr {
             :last-child {

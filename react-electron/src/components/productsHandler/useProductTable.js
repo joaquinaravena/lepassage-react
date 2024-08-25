@@ -91,22 +91,22 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
             </select>
           </div>`;
           } else if (field.type === "multi-select") {
-            // Campo multi-select
             return `
-          <div style="flex: 1; min-width: 220px;">
-            <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
-            <select id="swal-input${index}" class="swal2-input" style="width: 100%;" multiple>
-              ${options[field.name]?.map(option => {
-              const selectedValues = selectedData && Array.isArray(selectedData[field.name]) ? selectedData[field.name].map(item => item.id) : [];
-              return `
-                  <option value="${option.value}" ${selectedValues.includes(option.value) ? 'selected' : ''}>
-                    ${option.label}
-                  </option>
-                `;
-            }).join('')}
-            </select>
-          </div>`;
-          } else {
+              <div style="flex: 1; min-width: 220px;">
+                <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
+                <select id="swal-input${index}" class="swal2-input" style="width: 100%;" multiple>
+                  ${options[field.name]?.map(option => {
+                          const selectedValues = selectedData && Array.isArray(selectedData[field.name]) ? selectedData[field.name].map(item => item.id) : [];
+                          return `
+                      <option value="${option.value}" ${selectedValues.includes(option.value) ? 'selected' : ''}>
+                        ${option.label}
+                      </option>
+                    `;
+                        }).join('')}
+                </select>
+              </div>`;
+          }
+          else {
             // Campo de texto
             const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "") : "";
             return `
@@ -152,6 +152,7 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
             }
           });
         });
+
       },
     });
 
@@ -193,7 +194,6 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
   const handleEditRow = async () => {
     if (selectedIndex !== null) {
       const selectedData = data[selectedIndex];
-
       await loadAllOptions(); // Cargamos las opciones antes de abrir el formulario
 
       const { value: formValues } = await Swal.fire({

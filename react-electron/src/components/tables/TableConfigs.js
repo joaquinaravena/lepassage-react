@@ -82,6 +82,7 @@ export const insumosConfig = {
     { name: "sku", placeholder: "SKU" },
     { name: "tipo", placeholder: "Tipo de Insumo" },
     { name: "stock", placeholder: "Stock" },
+    { name: "volumen", placeholder: "Volumen"},
     { name: "precio", placeholder: "Precio" },
   ],
   tableName: "Insumos",
@@ -170,7 +171,7 @@ export const productos_viewConfig = {
     { name: "stock", placeholder: "Stock" },
     { name: "precio", placeholder: "Precio" },
   ],
-  tableName: "Productos",
+  tableName: "Catálogo",
   apiUrl: "/api/productos_view/",
 };
 

@@ -10,6 +10,7 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
     fetchData(apiUrl);
   }, [apiUrl]);
 
+
   const createInputsHtml = (fields, selectedData) => {
     return `<div style="display: flex; flex-wrap: wrap; gap: 15px;">${fields
         .map((field, index) => {
