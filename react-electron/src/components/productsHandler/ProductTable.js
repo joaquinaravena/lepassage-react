@@ -2,14 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 import { HashLoader } from "react-spinners";
 import useProductTable from "./useProductTable";
 import TableContainer from "../tables/TableContainer";
-import { costoTotal } from "../costoTotal";
+import useCostoTotal from "../costoTotal";
 
 export default function ProductTable({ viewConfig, productConfig, searchQuery }) {
     const { fields: viewFields, tableName: viewTableName, apiUrl: viewApiUrl } = viewConfig;
     const { fieldsTable: productFields, apiUrlTable: productApiUrl } = productConfig;
 
+    const costoTotal = useCostoTotal();
+
     const [isProductTableVisible, setIsProductTableVisible] = useState(false);
-    const { data, selectedIndex, isLoading, handleAddRow, handleDeleteRow, handleEditRow, handleRowClick, increaseStock, decreaseStock } =
+    const { data, isLoading, handleAddRow, handleDeleteRow, handleEditRow, handleRowClick, increaseStock, decreaseStock } =
         useProductTable({
             tableName: isProductTableVisible ? viewTableName : 'productos',
             apiUrl: isProductTableVisible ? viewApiUrl : productApiUrl,
@@ -17,26 +19,9 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
             apiUrlView: viewApiUrl,
         });
 
-    const [totalCosto, setTotalCosto] = useState(0);
-    const [loading, setLoading] = useState(true);
     const [filteredData, setFilteredData] = useState([]);
     const [selectedFilteredIndex, setSelectedFilteredIndex] = useState(null);
     const tableRef = useRef(null); // Referencia para la tabla
-
-    useEffect(() => {
-        const fetchCostoTotal = async () => {
-            try {
-                const total = await costoTotal();
-                setTotalCosto(total);
-            } catch (error) {
-                console.error('Error calculating total cost:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchCostoTotal();
-    }, []);
 
     useEffect(() => {
         if (searchQuery) {
@@ -64,11 +49,10 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
         }
     };
 
-
-    if (isLoading || loading)
+    if (isLoading)
         return (
             <div className="flex justify-center items-center h-full">
-                <HashLoader color={"#111"} loading={isLoading} size={100} />
+                <HashLoader color={"#111"} size={100} />
             </div>
         );
 
@@ -134,7 +118,7 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                 <div
                     className="flex flex-col items-end mb-4 space-y-2 border border-gray-300 p-4 rounded-lg shadow-sm bg-white">
                     <div className="text-right">
-                        <p className="text-sm font-medium">Valorizacion de Stock Total: ${totalCosto}</p>
+                        <p className="text-sm font-medium">Valorizacion de Stock Total: ${costoTotal}</p>
                     </div>
                     <div className="text-right">
                         <p className="text-sm font-medium">Valorizacion de Stock

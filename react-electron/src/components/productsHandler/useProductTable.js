@@ -39,13 +39,12 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
     }
   };
 
-
   const loadAllOptions = async () => {
     const fieldsWithOptions = fieldsTable.filter((field) => field.type === "multi-select" || field.name === "id_liquido");
 
     for (const field of fieldsWithOptions) {
       if (field.name === "id_liquido") {
-        await loadOptions(field.optionsUrl, field.name, "fragancia"); // Filtramos solo fragancias
+        await loadOptions(field.optionsUrl, field.name); // Filtramos solo fragancias
       } else {
         await loadOptions(field.optionsUrl, field.name);
       }
@@ -58,7 +57,7 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
 
       await Promise.all(fieldsWithOptions.map(field => {
         if (field.name === "id_liquido") {
-          return loadOptions(field.optionsUrl, field.name, "fragancia");
+          return loadOptions(field.optionsUrl, field.name);
         } else {
           return loadOptions(field.optionsUrl, field.name);
         }
@@ -71,68 +70,162 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
     fetchData(apiUrl);
   }, [apiUrl]);
 
-  const createInputsHtml = (fields, selectedData) => {
-    return `<div style="display: flex; flex-wrap: wrap; gap: 15px;">${fields
-        .map((field, index) => {
-          if (field.name === "id_liquido") {
-            // Campo select simple
-            return `
+  const handleOtherFields = (field, index, selectedData) => {
+    if (field.name === "id_liquido") {
+      return `
           <div style="flex: 1; min-width: 220px;">
             <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
-            <select id="swal-input${index}" class="swal2-input" style="width: 100%;">
+            <select id="swal-input${index}" class="swal2-input" style="width: 80%;">
               ${options[field.name]?.map(option => {
-              const selectedValue = selectedData ? selectedData[field.name] : null;
-              return `
+      const selectedValue = selectedData ? selectedData[field.name] : null;
+      return `
                   <option value="${option.value}" ${selectedValue === option.value ? 'selected' : ''}>
                     ${option.label}
                   </option>
                 `;
-            }).join('')}
+    }).join('')}
             </select>
           </div>`;
-          } else if (field.type === "multi-select") {
+    } else {
+      const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "") : "";
+      return `
+  <div style="flex: 1; min-width: 220px;">
+    <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
+    <input id="swal-input${index}" class="swal2-input" style="width: 80%;" value="${value}" />
+  </div>`;
+    }
+  };
+
+
+  const createSelectHtml = (fieldName, index, selectedData = {}, selectIndex = 0) => {
+    const selectedValues = selectedData && Array.isArray(selectedData[fieldName])
+        ? selectedData[fieldName].map(item => item.id) : [];
+
+    const selectedValue = selectedValues.length > 0 ? selectedValues[selectIndex] : "";
+
+    return `
+<div class="select-container" style="display: flex; align-items: center; justify-content: center; position: relative;">
+  <select class="swal2-input" style="width: 80%;" name="${fieldName}-${index}-${selectIndex}">
+    ${options[fieldName]?.map(option => `
+      <option value="${option.value}" ${selectedValue === option.value ? 'selected' : ''}>
+        ${option.label}
+      </option>`).join('')}
+  </select>
+  ${fieldName !== 'id_liquido' ? `
+  <button type="button" class="btn-remove" data-field="${fieldName}" data-index="${index}" data-select-index="${selectIndex}" style="position: absolute; right: 0; font-size: 15px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+      <path d="M5.5 5.5A.5.5 0 0 1 6 5h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5H6a.5.5 0 0 1-.5-.5v-7z"/>
+      <path fill-rule="evenodd" d="M4.5 1a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v1H4.5V1zM11 3V2H5v1h6zm1 10V5h1v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5h1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1z"/>
+    </svg>
+  </button>
+  ` : ''}
+</div>
+`;
+  };
+
+  const createInputsHtml = (fields, selectedData) => {
+    return `<div style="display: flex; flex-wrap: wrap; gap: 15px;">${fields
+        .map((field, index) => {
+          if (field.type === "multi-select") {
+            const selectedItems = selectedData ? selectedData[field.name] || [] : [];
             return `
-              <div style="flex: 1; min-width: 220px;">
-                <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
-                <select id="swal-input${index}" class="swal2-input" style="width: 100%;" multiple>
-                  ${options[field.name]?.map(option => {
-                          const selectedValues = selectedData && Array.isArray(selectedData[field.name]) ? selectedData[field.name].map(item => item.id) : [];
-                          return `
-                      <option value="${option.value}" ${selectedValues.includes(option.value) ? 'selected' : ''}>
-                        ${option.label}
-                      </option>
-                    `;
-                        }).join('')}
-                </select>
-              </div>`;
-          }
-          else {
-            // Campo de texto
-            const value = selectedData ? (selectedData[field.name] !== undefined ? selectedData[field.name] : "") : "";
-            return `
-          <div style="flex: 1; min-width: 220px;">
-            <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
-            <input id="swal-input${index}" class="swal2-input" style="width: 100%;" value="${value}" />
-          </div>`;
+  <div style="flex: 1; min-width: 220px;">
+    <div style="display: flex; align-items: center; position: relative;">
+      <label for="swal-input${index}" style="flex: 1; text-align: center;">${field.placeholder}</label>
+      <button type="button" id="add-select-btn${index}" class="btn-add" style="position: absolute; right: 0; font-size: 15px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+          <path d="M8 3a.5.5 0 0 1 .5.5V7h3.5a.5.5 0 0 1 0 1H8.5v3.5a.5.5 0 0 1-1 0V8H4a.5.5 0 0 1 0-1h3.5V3.5A.5.5 0 0 1 8 3z"/>
+        </svg>
+      </button>
+    </div>
+    <div id="multi-select-container${index}">
+      <div id="select-wrapper${index}">
+        ${selectedItems.length > 0
+                ? selectedItems.map((item, selectIndex) => createSelectHtml(field.name, index, { [field.name]: selectedItems }, selectIndex)).join('')
+                : createSelectHtml(field.name, index, {}, 0)}
+      </div>
+    </div>
+  </div>`;
+          } else {
+            return handleOtherFields(field, index, selectedData);
           }
         }).join("")}</div>`;
   };
 
+
+  useEffect(() => {
+    const handleAddSelectClick = (fieldName, index) => {
+      const selectWrapper = document.getElementById(`select-wrapper${index}`);
+      const currentSelectCount = selectWrapper.querySelectorAll('.select-container').length;
+      selectWrapper.insertAdjacentHTML('beforeend', createSelectHtml(fieldName, index, {}, currentSelectCount));
+      addRemoveEventListener(fieldName, index, currentSelectCount); // Añadir el event listener de remover al nuevo select
+    };
+
+    const handleRemoveSelectClick = (fieldName, index, selectIndex) => {
+      const selectWrapper = document.getElementById(`select-wrapper${index}`);
+      const selectContainer = document.querySelector(`[name="${fieldName}-${index}-${selectIndex}"]`).closest('.select-container');
+      selectWrapper.removeChild(selectContainer);
+    };
+
+    const addRemoveEventListener = (fieldName, index, selectIndex) => {
+      const removeButton = document.querySelector(`[name="${fieldName}-${index}-${selectIndex}"]`).closest('.select-container').querySelector('.btn-remove');
+      if (removeButton) {
+        removeButton.addEventListener('click', () => handleRemoveSelectClick(fieldName, index, selectIndex));
+      }
+    };
+
+    fieldsTable.forEach((field, index) => {
+      if (field.type === "multi-select") {
+        const addButton = document.getElementById(`add-select-btn${index}`);
+        if (addButton) {
+          const boundClickHandler = handleAddSelectClick.bind(null, field.name, index);
+          addButton.addEventListener('click', boundClickHandler);
+          addButton.dataset.clickHandler = boundClickHandler;
+        }
+
+        const selectContainers = document.querySelectorAll(`#select-wrapper${index} .select-container`);
+        selectContainers.forEach((container, selectIndex) => {
+          addRemoveEventListener(field.name, index, selectIndex);
+        });
+      }
+    });
+
+    return () => {
+      fieldsTable.forEach((field, index) => {
+        if (field.type === "multi-select") {
+          const addButton = document.getElementById(`add-select-btn${index}`);
+          if (addButton && addButton.dataset.clickHandler) {
+            addButton.removeEventListener('click', addButton.dataset.clickHandler);
+          }
+
+          const selectContainers = document.querySelectorAll(`#select-wrapper${index} .select-container`);
+          selectContainers.forEach((container, selectIndex) => {
+            const removeButton = container.querySelector('.btn-remove');
+            if (removeButton) {
+              removeButton.removeEventListener('click', () => handleRemoveSelectClick(field.name, index, selectIndex));
+            }
+          });
+        }
+      });
+    };
+  }, [fieldsTable, options]);
+
   const getFormValues = (fields) => {
     return fields.reduce((acc, field, index) => {
-      const element = document.getElementById(`swal-input${index}`);
+      const inputId = `swal-input${index}`;
+      const inputElement = document.getElementById(inputId);
+
       if (field.type === "multi-select") {
-        acc[field.name] = Array.from(element.selectedOptions).map(option => option.value);
-      } else if (field.name === "id_liquido") {
-        acc[field.name] = parseInt(element.value, 10);
+        const selects = document.querySelectorAll(`[name^="${field.name}-${index}"]`);
+        acc[field.name] = Array.from(selects).map(select => select.value);
+      } else if (field.type === "select" && field.name === "id_liquido") {
+        acc[field.name] = inputElement ? inputElement.value : null;
       } else {
-        acc[field.name] = element.value;
+        acc[field.name] = inputElement ? inputElement.value : null;
       }
       return acc;
     }, {});
   };
-
-
 
   const handleAddRow = async () => {
     await loadAllOptions(); // Cargamos las opciones antes de abrir el formulario
@@ -152,13 +245,11 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
             }
           });
         });
-
       },
     });
 
-    if (formValues && fieldsTable.every((field) => formValues[field.name])) {
+    if (formValues && fieldsTable.every((field) => formValues[field.name] !== undefined && formValues[field.name] !== null && formValues[field.name].length > 0)) {
       try {
-        // Transformamos los campos antes de enviarlos al backend
         const transformedValues = {
           ...formValues,
           miscelaneas_ids: formValues.miscelaneas,
@@ -166,15 +257,15 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
           paquetes_ids: formValues.paquetes,
         };
 
+        // Eliminamos las claves originales, ya que usaremos las transformadas
         delete transformedValues.miscelaneas;
         delete transformedValues.envases;
         delete transformedValues.paquetes;
 
+
         await addItem(apiUrl, transformedValues);
         await fetchData(apiUrlView);
         await fetchData(apiUrl);
-
-        console.log("Datos resultantes:", data);
 
         await Swal.fire(
             `${tableName} agregado`,
@@ -190,11 +281,10 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
     }
   };
 
-
   const handleEditRow = async () => {
     if (selectedIndex !== null) {
       const selectedData = data[selectedIndex];
-      await loadAllOptions(); // Cargamos las opciones antes de abrir el formulario
+      await loadAllOptions();
 
       const { value: formValues } = await Swal.fire({
         title: `Editar ${tableName}`,

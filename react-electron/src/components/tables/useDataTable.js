@@ -15,7 +15,6 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
     return `<div style="display: flex; flex-wrap: wrap; gap: 15px;">${fields
         .map((field, index) => {
           if (field.options) {
-            // Renderizar select
             return `
           <div style="flex: 1; min-width: 220px;">
             <label for="swal-input${index}" style="display: block;">${field.placeholder}</label>
