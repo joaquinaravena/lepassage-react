@@ -131,7 +131,7 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                 <thead>
                 <tr>
                     {fieldsToShow.map((field) => (
-                        <th key={field.name} className="px-4 py-2 text-left border-b border-gray-200">
+                        <th key={field.name} className="px-4 py-2 text-center border-b border-gray-200">
                             {field.placeholder}
                         </th>
                     ))}
@@ -147,7 +147,7 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                         onClick={() => handleFilteredRowClick(index)}
                     >
                         {fieldsToShow.map((field) => (
-                            <td key={field.name} className="px-4 py-2 border-b border-gray-200">
+                            <td key={field.name} className="px-4 py-2 text-center border-b border-gray-200">
                                 {Array.isArray(fila[field.name]) ? (
                                     fila[field.name].map((item) => item.nombre).join(", ")
                                 ) : (

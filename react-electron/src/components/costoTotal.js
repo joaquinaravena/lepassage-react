@@ -21,7 +21,7 @@ const useCostoTotal = () => {
             return data.reduce((acc, curr) => {
                 const precio = parseFloat(curr.precio) || 0;
                 const cantidad = apiUrl === liquidosConfig.apiUrl
-                    ? (parseFloat(curr.volumen) || 0) / 1000 // Convertir mililitros a litros
+                    ? (parseFloat(curr.volumen) || 0) // Convertir mililitros a litros
                     : parseFloat(curr.stock) || 0;
                 return acc + (precio * cantidad);
             }, 0);

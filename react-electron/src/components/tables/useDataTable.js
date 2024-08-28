@@ -47,8 +47,6 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
         .join("")}</div>`;
   };
 
-
-
   const getFormValues = (fields) => {
     return fields.reduce((acc, field, index) => {
       const element = document.getElementById(`swal-input${index}`);
@@ -66,7 +64,16 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
       title: `Agregar en ${tableName}`,
       html: createInputsHtml(fields),
       focusConfirm: false,
-      preConfirm: () => getFormValues(fields),
+      preConfirm: () => {
+        const values = getFormValues(fields);
+        const errorMessage = validateFormValues(values, fields); // Validar los valores obtenidos
+
+        if (errorMessage) {
+          Swal.showValidationMessage(errorMessage); // Mostrar mensaje de validación si hay errores
+          return false;
+        }
+        return values;
+      },
       didOpen: () => {
         const inputElements = document.querySelectorAll(".swal2-input");
         inputElements.forEach((input) => {
@@ -80,9 +87,14 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
       },
     });
 
-    if (formValues && fields.every((field) => formValues[field.name])) {
+    if (formValues) {
       try {
-        await addItem(apiUrl, formValues);
+        const transformedValues = {
+          ...formValues,
+          vencimiento: formValues.vencimiento ? formValues.vencimiento : null,
+        };
+
+        await addItem(apiUrl, transformedValues);
         await fetchData(apiUrl);
 
         await Swal.fire(
@@ -91,11 +103,9 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
             "success"
         );
       } catch (error) {
-        console.error('Error adding row:', error);
+        console.error("Error adding row:", error);
         await Swal.fire("Error", "No se pudo agregar la fila", "error");
       }
-    } else {
-      await Swal.fire("Error", "Por favor, completa todos los campos", "error");
     }
   };
 
@@ -107,7 +117,16 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
         title: `Editar ${tableName}`,
         html: createInputsHtml(fields, selectedData),
         focusConfirm: false,
-        preConfirm: () => getFormValues(fields),
+        preConfirm: () => {
+          const values = getFormValues(fields);
+          const errorMessage = validateFormValues(values, fields); // Validar los valores obtenidos
+
+          if (errorMessage) {
+            Swal.showValidationMessage(errorMessage); // Mostrar mensaje de validación si hay errores
+            return false;
+          }
+          return values;
+        },
         didOpen: () => {
           const inputElements = document.querySelectorAll(".swal2-input");
           inputElements.forEach((input) => {
@@ -121,21 +140,51 @@ export default function useDataTable({ fields, tableName, apiUrl}) {
         },
       });
 
-      if (formValues && fields.every((field) => formValues[field.name])) {
-        editItem(apiUrl, selectedData.id, formValues);
-        fetchData(apiUrl);
+      if (formValues) {
+        try {
+          const transformedValues = {
+            ...formValues,
+            vencimiento: formValues.vencimiento ? formValues.vencimiento : null,
+          };
 
-        await Swal.fire(
-            `${tableName} actualizado`,
-            `${tableName} ha sido actualizado correctamente`,
-            "success"
-        );
+          await editItem(apiUrl, selectedData.id, transformedValues);
+          await fetchData(apiUrl);
+
+          await Swal.fire(
+              `${tableName} actualizado`,
+              `${tableName} ha sido actualizado correctamente`,
+              "success"
+          );
+        } catch (error) {
+          console.error("Error updating row:", error);
+          await Swal.fire("Error", "No se pudo actualizar la fila", "error");
+        }
       } else {
-        await Swal.fire("Error", "Por favor, completa todos los campos", "error");
+        await Swal.fire("Error", "No hay fila seleccionada", "error");
       }
-    } else {
-      await Swal.fire("Error", "No hay fila seleccionada", "error");
     }
+  };
+
+  const validateFormValues = (values, fields) => {
+
+    const requiredFields = ["nombre", "sku"]; // Campos obligatorios
+    const numericFields = ["stock", "precio", "volumen"]; // Campos numéricos
+
+    for (const field of fields) {
+      const { name, placeholder } = field; // Extraer el nombre y el placeholder
+      const fieldValue = values[name]?.trim(); // Trim para evitar espacios vacíos
+
+      // Validar campos obligatorios
+      if (requiredFields.includes(name) && (!fieldValue || fieldValue.length === 0)) {
+        return `El campo "${placeholder}" es obligatorio.`; // Utilizar placeholder en el mensaje de error
+      }
+
+      // Validar campos numéricos
+      if (numericFields.includes(name) && (isNaN(fieldValue) || fieldValue === "")) {
+        return `El campo "${placeholder}" debe ser un número.`; // Utilizar placeholder en el mensaje de error
+      }
+    }
+    return null; // No hay errores
   };
 
   const handleDeleteRow = async () => {

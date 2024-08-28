@@ -49,7 +49,7 @@ export const LiquidosConfig = () => {
     { name: "nombre", placeholder: "Nombre del Líquido" },
     { name: "sku", placeholder: "SKU" },
     { name: "tipo", placeholder: "Tipo de Líquido", options: tipo_liquido_choices },
-    { name: "volumen", placeholder: "Volumen (ml)" },
+    { name: "volumen", placeholder: "Volumen (L)" },
     { name: "precio", placeholder: "Precio por Litro" },
     { name: "vencimiento", placeholder: "Vencimiento", type: "date" },
   ];

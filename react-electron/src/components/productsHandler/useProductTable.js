@@ -216,8 +216,9 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
       const inputElement = document.getElementById(inputId);
 
       if (field.type === "multi-select") {
+        // Captura todos los selects con el mismo nombre para manejar los duplicados
         const selects = document.querySelectorAll(`[name^="${field.name}-${index}"]`);
-        acc[field.name] = Array.from(selects).map(select => select.value);
+        acc[field.name] = Array.from(selects).map(select => select.value).filter(value => value); // Evita valores vacíos
       } else if (field.type === "select" && field.name === "id_liquido") {
         acc[field.name] = inputElement ? inputElement.value : null;
       } else {
@@ -232,9 +233,18 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
 
     const { value: formValues } = await Swal.fire({
       title: `Agregar en ${tableName}`,
-      html: createInputsHtml(fieldsTable), // Usamos fieldsTable para incluir los multi-selects y el select filtrado
+      html: createInputsHtml(fieldsTable), // Genera los inputs basados en fieldsTable
       focusConfirm: false,
-      preConfirm: () => getFormValues(fieldsTable),
+      preConfirm: () => {
+        const values = getFormValues(fieldsTable); // Obtener valores de los inputs
+        const errorMessage = validateFormValues(values, fieldsTable); // Validar los valores obtenidos
+
+        if (errorMessage) {
+          Swal.showValidationMessage(errorMessage); // Mostrar mensaje de validación
+          return false; // Detener confirmación si hay errores
+        }
+        return values;
+      },
       didOpen: () => {
         const inputElements = document.querySelectorAll(".swal2-input");
         inputElements.forEach((input) => {
@@ -248,7 +258,7 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
       },
     });
 
-    if (formValues && fieldsTable.every((field) => formValues[field.name] !== undefined && formValues[field.name] !== null && formValues[field.name].length > 0)) {
+    if (formValues) {
       try {
         const transformedValues = {
           ...formValues,
@@ -257,11 +267,9 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
           paquetes_ids: formValues.paquetes,
         };
 
-        // Eliminamos las claves originales, ya que usaremos las transformadas
         delete transformedValues.miscelaneas;
         delete transformedValues.envases;
         delete transformedValues.paquetes;
-
 
         await addItem(apiUrl, transformedValues);
         await fetchData(apiUrlView);
@@ -276,8 +284,6 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
         console.error("Error adding row:", error);
         await Swal.fire("Error", "No se pudo agregar la fila", "error");
       }
-    } else {
-      await Swal.fire("Error", "Por favor, completa todos los campos", "error");
     }
   };
 
@@ -290,7 +296,16 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
         title: `Editar ${tableName}`,
         html: createInputsHtml(fieldsTable, selectedData),
         focusConfirm: false,
-        preConfirm: () => getFormValues(fieldsTable),
+        preConfirm: () => {
+          const values = getFormValues(fieldsTable); // Obtener valores de los inputs
+          const errorMessage = validateFormValues(values, fieldsTable); // Validar los valores obtenidos
+
+          if (errorMessage) {
+            Swal.showValidationMessage(errorMessage); // Mostrar mensaje de validación
+            return false; // Detener confirmación si hay errores
+          }
+          return values;
+        },
         didOpen: () => {
           const inputElements = document.querySelectorAll(".swal2-input");
           inputElements.forEach((input) => {
@@ -304,17 +319,16 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
         },
       });
 
-      if (formValues && fieldsTable.every((field) => formValues[field.name])) {
+      if (formValues) {
         try {
-          // Transformamos los campos antes de enviarlos al backend
           const transformedValues = {
             ...formValues,
-            miscelaneas_ids: formValues.miscelaneas, // Renombramos los campos
+            miscelaneas_ids: formValues.miscelaneas,
             envases_ids: formValues.envases,
             paquetes_ids: formValues.paquetes,
           };
 
-          delete transformedValues.miscelaneas; // Eliminamos los campos originales para evitar conflictos
+          delete transformedValues.miscelaneas;
           delete transformedValues.envases;
           delete transformedValues.paquetes;
 
@@ -331,13 +345,35 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
           console.error("Error updating row:", error);
           await Swal.fire("Error", "No se pudo actualizar la fila", "error");
         }
-      } else {
-        await Swal.fire("Error", "Por favor, completa todos los campos", "error");
       }
     } else {
       await Swal.fire("Error", "No hay fila seleccionada", "error");
     }
   };
+
+  const validateFormValues = (values, fields) => {
+
+    console.log(fields);
+    const requiredFields = ["nombre", "sku"]; // Campos obligatorios
+    const numericFields = ["stock", "precio"]; // Campos numéricos
+
+    for (const field of fields) {
+      const { name, placeholder } = field; // Extraer el nombre y el placeholder
+      const fieldValue = values[name]?.trim(); // Trim para evitar espacios vacíos
+
+      // Validar campos obligatorios
+      if (requiredFields.includes(name) && (!fieldValue || fieldValue.length === 0)) {
+        return `El campo "${placeholder}" es obligatorio.`; // Utilizar placeholder en el mensaje de error
+      }
+
+      // Validar campos numéricos
+      if (numericFields.includes(name) && (isNaN(fieldValue) || fieldValue === "")) {
+        return `El campo "${placeholder}" debe ser un número.`; // Utilizar placeholder en el mensaje de error
+      }
+    }
+    return null; // No hay errores
+  };
+
 
   const handleDeleteRow = async () => {
     if (selectedIndex !== null) {
