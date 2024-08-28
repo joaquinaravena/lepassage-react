@@ -7,6 +7,7 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
   const { deleteItem, fetchData, addItem, editItem, updateProduct, data, isLoading } = useContext(GenericContext);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
+
   // Estado para las opciones de misceláneas, envases, paquetes y líquidos filtrados
   const [options, setOptions] = useState({
     miscelaneas: [],

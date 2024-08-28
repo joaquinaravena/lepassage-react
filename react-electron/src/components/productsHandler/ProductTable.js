@@ -11,6 +11,7 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
     const costoTotal = useCostoTotal();
 
     const [isProductTableVisible, setIsProductTableVisible] = useState(false);
+    const [liquidosMap, setLiquidosMap] = useState({});
     const { data, isLoading, handleAddRow, handleDeleteRow, handleEditRow, handleRowClick, increaseStock, decreaseStock } =
         useProductTable({
             tableName: isProductTableVisible ? viewTableName : 'productos',
@@ -37,6 +38,22 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
             setFilteredData(data);
         }
     }, [searchQuery, data, productFields]);
+
+    useEffect(() => {
+        // Actualizar datos de líquidos (si se requiere) al cargar
+        // Suponiendo que el `data` contiene información de líquidos
+        const fetchLiquidos = async () => {
+            const response = await fetch("http://localhost:8000/api/liquidos/"); // Cambiar URL según sea necesario
+            const liquidos = await response.json();
+            const map = {};
+            liquidos.forEach((liquido) => {
+                map[liquido.id] = liquido.nombre;
+            });
+            setLiquidosMap(map);
+        };
+
+        fetchLiquidos();
+    }, []);
 
     const handleFilteredRowClick = (index) => {
         if(selectedFilteredIndex === index || index === null) {
@@ -127,8 +144,9 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                 </div>
             </div>
 
+            <div className="overflow-auto max-h-full">
             <table className="min-w-full">
-                <thead>
+                <thead className="sticky top-0 bg-options-panel">
                 <tr>
                     {fieldsToShow.map((field) => (
                         <th key={field.name} className="px-4 py-2 text-center border-b border-gray-200">
@@ -148,10 +166,14 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                     >
                         {fieldsToShow.map((field) => (
                             <td key={field.name} className="px-4 py-2 text-center border-b border-gray-200">
-                                {Array.isArray(fila[field.name]) ? (
-                                    fila[field.name].map((item) => item.nombre).join(", ")
+                                {field.name === "id_liquido" ? (
+                                    liquidosMap[fila[field.name]] || "Desconocido"
                                 ) : (
-                                    fila[field.name] !== undefined ? fila[field.name] : "indefinido"
+                                    Array.isArray(fila[field.name]) ? (
+                                        fila[field.name].map((item) => item.nombre).join(", ")
+                                    ) : (
+                                        fila[field.name] !== undefined ? fila[field.name] : "indefinido"
+                                    )
                                 )}
                             </td>
                         ))}
@@ -159,6 +181,7 @@ export default function ProductTable({ viewConfig, productConfig, searchQuery })
                 ))}
                 </tbody>
             </table>
+            </div>
         </TableContainer>
     );
 }

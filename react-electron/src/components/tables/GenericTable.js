@@ -133,48 +133,51 @@ export default function GenericTable({ config, searchQuery }) {
                         <p className="text-sm font-medium">Valorizacion de Stock Total: ${costoTotal}</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-sm font-medium">Valorizacion de Stock en {tableName}: ${costoTotalTablaActual}</p>
+                        <p className="text-sm font-medium">Valorizacion de Stock en {tableName}:
+                            ${costoTotalTablaActual}</p>
                     </div>
                 </div>
             </div>
 
-            {/* Tabla de datos */}
-            <table className="min-w-full table-auto">
-                <thead>
-                <tr>
-                    {fields.map((field) => (
-                        <th
-                            key={field.name}
-                            className="px-4 py-2 text-center border-b border-gray-200"
-                        >
-                            {field.placeholder}
-                        </th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {filteredData.map((fila, index) => (
-                    <tr
-                        key={index}
-                        className={`cursor-pointer ${
-                            data.indexOf(fila) === selectedFilteredIndex ? "bg-blue-50" : ""
-                        }`}
-                        onClick={() => handleFilteredRowClick(index)}
-                    >
+            <div className="overflow-auto max-h-full">
+                <table className="min-w-full table-auto">
+                    <thead className="sticky top-0 bg-options-panel">
+                    <tr>
                         {fields.map((field) => (
-                            <td
+                            <th
                                 key={field.name}
-                                className="px-4 py-2 border-b border-gray-200 text-center"
+                                className="px-4 py-2 text-center border-b border-t border-black"
                             >
-                                {fila[field.name] !== undefined
-                                    ? fila[field.name]
-                                    : "indefinido"}
-                            </td>
+                                {field.placeholder}
+                            </th>
                         ))}
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                    {filteredData.map((fila, index) => (
+                        <tr
+                            key={index}
+                            className={`cursor-pointer ${
+                                filteredData.indexOf(fila) === selectedFilteredIndex ? "bg-blue-50" : ""
+                            }`}
+                            onClick={() => handleFilteredRowClick(index)}
+                        >
+                            {fields.map((field) => (
+                                <td
+                                    key={field.name}
+                                    className="px-4 py-2 border-b border-gray-200 text-center"
+                                >
+                                    {fila[field.name] !== undefined
+                                        ? fila[field.name]
+                                        : "indefinido"}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
         </TableContainer>
     );
 }
