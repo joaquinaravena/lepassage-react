@@ -352,14 +352,12 @@ export default function useProductTable({ tableName, apiUrl, fieldsTable, apiUrl
   };
 
   const validateFormValues = (values, fields) => {
-
-    console.log(fields);
     const requiredFields = ["nombre", "sku"]; // Campos obligatorios
     const numericFields = ["stock", "precio"]; // Campos numéricos
 
     for (const field of fields) {
       const { name, placeholder } = field; // Extraer el nombre y el placeholder
-      const fieldValue = values[name]?.trim(); // Trim para evitar espacios vacíos
+      const fieldValue = values[name]; // Trim para evitar espacios vacíos
 
       // Validar campos obligatorios
       if (requiredFields.includes(name) && (!fieldValue || fieldValue.length === 0)) {
