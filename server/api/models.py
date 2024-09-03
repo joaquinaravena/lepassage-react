@@ -123,7 +123,7 @@ class ProductosView(models.Model):
     nombre = models.CharField(max_length=45)
     sku = models.CharField(max_length=45, primary_key=True)
     fragancia = models.CharField(max_length=45, null=True)
-    volumen = models.IntegerField(null=True)
+    volumen = models.CharField(max_length=255, null=True)
     stock = models.IntegerField()
     precio = models.DecimalField(max_digits=9, decimal_places=2)
 

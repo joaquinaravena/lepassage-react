@@ -60,21 +60,23 @@ FROM
     api_envase;
 
 CREATE VIEW productos AS
-SELECT 
+SELECT
     p.nombre AS nombre,
     p.sku AS sku,
     l.nombre AS fragancia,
-    en.volumen AS volumen,
+    GROUP_CONCAT(en.volumen SEPARATOR ', ') AS volumen,
     p.stock AS stock,
     p.precio AS precio
 FROM
     api_producto p
-JOIN
+        JOIN
     api_productoenvase pe ON p.id = pe.producto_id
-JOIN
+        JOIN
     api_envase en ON pe.envase_id = en.id
-LEFT JOIN
+        LEFT JOIN
     api_liquido l ON p.id_liquido_id = l.id
+GROUP BY
+    p.id
 
 UNION ALL
 
@@ -103,4 +105,7 @@ FROM
     api_miscelanea m
 WHERE
     m.vendible = TRUE;
+
+
+
 
