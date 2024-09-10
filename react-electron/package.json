@@ -1,7 +1,31 @@
 {
-  "name": "react-electron",
+  "name": "lestock-v1.0",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
+  "author": "JIRM",
+  "main": "build/main.js",
+  "build": {
+    "extends": null,
+    "appId": "com.lestock.react-electron",
+    "productName": "LeStock",
+    "files": [
+      "build/**/*",
+      "public/**/*",
+      "server/**/*"
+    ],
+    "directories": {
+      "buildResources": "src/images"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "src/images/iconLPS.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "src/images/iconLPS.png"
+    }
+  },
   "dependencies": {
     "@electron/remote": "^2.1.2",
     "@mui/material": "^5.16.4",
@@ -9,6 +33,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.19",
+    "electron-is-dev": "^3.0.1",
     "postcss": "^8.4.39",
     "react": "^18.3.1",
     "react-data-table-component": "^7.6.2",
@@ -25,12 +50,12 @@
     "tailwindcss": "^3.4.6",
     "web-vitals": "^2.1.4"
   },
-  "main": "public/main.js",
-  "homepage": "./",
   "scripts": {
-    "start": "concurrently -k \"cross-env BROWSER=none npm run start-react\" \"wait-on tcp:3000 && electron .\" \"python ../server/manage.py runserver\"",
+    "start": "concurrently -k \"cross-env BROWSER=none npm run start-react\" \"wait-on tcp:3000 && electron .\"",
     "start-react": "react-scripts start",
     "build": "react-scripts build",
+    "copy-server": "cpx \"D:/Escritorio/Proyectos Personales/lepassage app v2/lepassage-react/server/**/*\" server",
+    "build-electron": "npm run copy-server && electron-builder",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -54,8 +79,11 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
+    "cpx": "^1.5.0",
     "cross-env": "^7.0.3",
     "electron": "^31.2.1",
+    "electron-builder": "^25.0.5",
+    "rimraf": "^6.0.1",
     "wait-on": "^7.2.0"
   }
 }

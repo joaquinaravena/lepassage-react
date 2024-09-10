@@ -6,7 +6,7 @@ import {
     MiscelaneaConfig,
     PackagingConfig,
     productosConfig
-} from "./tables/TableConfigs"; // Asegúrate de importar tu hook correctamente
+} from "./tables/TableConfigs";
 
 const useCostoTotal = () => {
     const liquidosConfig = LiquidosConfig();
